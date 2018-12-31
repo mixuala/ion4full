@@ -1,0 +1,51 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Notifications
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item-group>
+    <ion-item-divider sticky>
+      <ion-label>
+        <ion-text color="dark">Today</ion-text>
+      </ion-label>
+    </ion-item-divider>
+    <ion-item class="notification-item" lines="none" *ngFor="let notification of notifications.today">
+      <ion-avatar slot="start">
+        <img [src]="notification.image">
+      </ion-avatar>
+      <ion-row class="details">
+        <ion-col size="12" class="details-col">
+          <h2 class="name">{{notification.name}}</h2>
+          <p class="description">{{notification.message}}</p>
+        </ion-col>
+      </ion-row>
+      <h3 class="date" slot="end">{{notification.date}}</h3>
+    </ion-item>
+  </ion-item-group>
+  <ion-item-group>
+    <ion-item-divider sticky>
+      <ion-label>
+        <ion-text color="dark">Yesterday</ion-text>
+      </ion-label>
+    </ion-item-divider>
+    <ion-item class="notification-item" lines="none" *ngFor="let notification of notifications.yesterday">
+      <ion-avatar slot="start">
+        <img [src]="notification.image">
+      </ion-avatar>
+      <ion-row class="details">
+        <ion-col size="12" class="details-col">
+          <h2 class="name">{{notification.name}}</h2>
+          <p class="description">{{notification.message}}</p>
+        </ion-col>
+      </ion-row>
+      <h3 class="date" slot="end">{{notification.date}}</h3>
+    </ion-item>
+  </ion-item-group>
+</ion-content>

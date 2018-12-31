@@ -1,0 +1,112 @@
+// Ionic Variables and Theming. For more info, please see:
+// http://ionicframework.com/docs/theming/
+
+/** Ionic CSS Variables **/
+:root {
+  --ion-color-primary: #1C1C1C;
+  --ion-color-primary-rgb: 28,28,28;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255,255,255;
+  --ion-color-primary-shade: #191919;
+  --ion-color-primary-tint: #333333;
+  --ion-color-primary-tint-rgb: 51,51,51;
+
+  --ion-color-secondary: #FF0062;
+  --ion-color-secondary-rgb: 255,0,98;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255,255,255;
+  --ion-color-secondary-shade: #e00056;
+  --ion-color-secondary-tint: #ff1a72;
+
+  --ion-color-tertiary: #FFFFFF;
+  --ion-color-tertiary-rgb: 255,255,255;
+  --ion-color-tertiary-contrast: #000000;
+  --ion-color-tertiary-contrast-rgb: 0,0,0;
+  --ion-color-tertiary-shade: #e0e0e0;
+  --ion-color-tertiary-tint: #ffffff;
+
+  --ion-color-success: #20dc6a;
+  --ion-color-success-rgb: 32,220,106;
+  --ion-color-success-contrast: #000000;
+  --ion-color-success-contrast-rgb: 0,0,0;
+  --ion-color-success-shade: #1cc25d;
+  --ion-color-success-tint: #36e079;
+
+  --ion-color-warning: #ffed11;
+  --ion-color-warning-rgb: 255,237,17;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0,0,0;
+  --ion-color-warning-shade: #e0d10f;
+  --ion-color-warning-tint: #ffef29;
+
+  --ion-color-danger: #f4344f;
+  --ion-color-danger-rgb: 244,52,79;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255,255,255;
+  --ion-color-danger-shade: #d72e46;
+  --ion-color-danger-tint: #f54861;
+
+  --ion-color-darkest: #000000;
+  --ion-color-darkest-rgb: 0,0,0;
+
+  --ion-color-lightest: #FFFFFF;
+  --ion-color-lightest-rgb: 255,255,255;
+
+  --ion-color-dark: #222428;
+  --ion-color-dark-rgb: 34,34,34;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255,255,255;
+  --ion-color-dark-shade: #1e2023;
+  --ion-color-dark-tint: #383a3e;
+
+  --ion-color-medium: #989aa2;
+  --ion-color-medium-rgb: 152,154,162;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255,255,255;
+  --ion-color-medium-shade: #86888f;
+  --ion-color-medium-tint: #a2a4ab;
+
+  --ion-color-light: #f4f5f8;
+  --ion-color-light-rgb: 244,244,244;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0,0,0;
+  --ion-color-light-shade: #d7d8da;
+  --ion-color-light-shade-rgb: 215,216,218;
+  --ion-color-light-tint: #f5f6f9;
+
+
+}
+
+// Custom Colors
+
+:root {
+  --ion-color-facebook: #3b5998;
+  --ion-color-facebook-rgb: 59,89,152;
+  --ion-color-facebook-contrast: #ffffff;
+  --ion-color-facebook-contrast-rgb: 255,255,255;
+  --ion-color-facebook-shade: #344e86;
+  --ion-color-facebook-tint: #4f6aa2;
+
+  --ion-color-google: #cc181e;
+  --ion-color-google-rgb: 204,24,30;
+  --ion-color-google-contrast: #ffffff;
+  --ion-color-google-contrast-rgb: 255,255,255;
+  --ion-color-google-shade: #b4151a;
+  --ion-color-google-tint: #d12f35;
+
+  --ion-color-twitter: #00aced;
+  --ion-color-twitter-rgb: 0,172,237;
+  --ion-color-twitter-contrast: #ffffff;
+  --ion-color-twitter-contrast-rgb: 255,255,255;
+  --ion-color-twitter-shade: #0097d1;
+  --ion-color-twitter-tint: #1ab4ef;
+}
+
+html.ios {
+  // ios
+  --header-height: 44px;
+}
+html.md {
+  // md
+  --header-height: 56px;
+}

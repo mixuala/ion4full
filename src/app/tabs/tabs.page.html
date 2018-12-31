@@ -1,0 +1,26 @@
+<ion-tabs>
+  <ion-tab tab="home-view">
+    <ion-router-outlet name="home"></ion-router-outlet>
+  </ion-tab>
+  <ion-tab tab="profile-view">
+    <ion-router-outlet name="profile"></ion-router-outlet>
+  </ion-tab>
+  <ion-tab tab="notifications-view">
+    <ion-router-outlet name="notifications"></ion-router-outlet>
+  </ion-tab>
+
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="home-view" href="app/tabs/(home:categories)">
+      <ion-icon name="home"></ion-icon>
+      <ion-label>Categories</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="profile-view" href="app/tabs/(profile:profile)">
+      <ion-icon name="person"></ion-icon>
+      <ion-label>Profile</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="notifications-view" href="app/tabs/(notifications:notifications)">
+      <ion-icon name="notifications-outline"></ion-icon>
+      <ion-label>Notifications</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

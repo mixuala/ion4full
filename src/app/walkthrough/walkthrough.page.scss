@@ -1,0 +1,236 @@
+:host {
+  --swiper-pagination-space: 40px;
+  --swiper-pagination-height: 18px;
+  --pagination-bullet-size: 10px;
+
+  --first-slide-background: #{ rgba(#00AFFF, .25); };
+  --second-slide-background:#{ rgba(#38d39f, .45); };
+  --third-slide-background: #{ rgba(#cb328f, .25); };
+  --last-slide-background: #eef3ff;
+}
+
+ion-header {
+  ion-toolbar {
+    --background: transparent;
+    // For the skip button
+    --color: var(--ion-color-tertiary);
+  }
+}
+
+ion-content {
+  --background: #FFF;
+
+  // To get the ion-content behind the ion-header
+  position: absolute;
+  top: 0;
+}
+
+.walkthrough-slides {
+  height: 100%;
+  --bullet-background: var(--ion-color-primary);
+  --bullet-background-active: var(--ion-color-primary);
+
+  .slide-inner-row {
+    height: 100%;
+    width: 100%;
+    padding: 0px;
+    // Header space
+    padding-top: var(--header-height);
+    // .swiper-pagination space
+    border-bottom: var(--swiper-pagination-space) solid transparent;
+    background-clip: padding-box;
+
+    // Don't know why it gets overridden by content-box if I don't add this
+    box-sizing: border-box;
+  }
+
+  .swiper-pagination {
+    height: var(--swiper-pagination-height);
+    line-height: 1;
+    // .swiper-pagination is 18px height, .slide-inner-row has 40px of padding-bottom => bottom = (40px - 18px)/2 = 11px
+    bottom: calc((var(--swiper-pagination-space) - var(--swiper-pagination-height) ) / 2);
+
+    .swiper-pagination-bullet {
+      width: var(--pagination-bullet-size);
+      height: var(--pagination-bullet-size);
+    }
+  }
+}
+
+.illustration-and-decoration-slide {
+  .slide-inner-row {
+    --ion-grid-column-padding: 0px;
+    flex-flow: column;
+    justify-content: flex-start;
+  }
+
+  .illustration-col {
+    flex-grow: 0;
+    flex-shrink: 0;
+    min-height: auto;
+    min-height: fit-content;
+
+    app-preload-image {
+      --loading-background: transparent;
+      --spinner-color: #FFF;
+
+      // Override <ion-slide> image styles
+      img {
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  .decoration-col {
+    flex-grow: 0;
+    flex-shrink: 1;
+    min-height: auto;
+    background-color: var(--background);
+
+    // To prevent transparent line caused by pixel fractions
+    .vector-decoration {
+      // margin-top: -1px;
+      shape-rendering: geometricprecision;
+      overflow: visible;
+    }
+  }
+
+  .info-col {
+    flex-grow: 1;
+    flex-shrink: 0;
+    min-height: auto;
+    background-color: var(--background);
+    // To prevent transparent line caused by pixel fractions
+    // margin-top: -1px;
+
+    .info-wrapper {
+      margin: -20px 20px 0px;
+      text-align: left;
+
+      .info-title {
+        margin: 0px 0px 20px;
+        color: #333;
+      }
+
+      .info-paragraph {
+        color: #666;
+        font-size: 14px;
+        margin: 0px 0px 10px;
+
+        &:last-child {
+          margin-bottom: 0px;
+        }
+      }
+    }
+  }
+}
+
+.first-slide {
+  --vector-decoration-fill: var(--first-slide-background);
+
+  .slide-inner-row {
+    background-color: var(--first-slide-background);
+  }
+
+  .illustration-col {
+    padding: 0px 8%;
+  }
+}
+
+.second-slide {
+  --vector-decoration-fill: var(--second-slide-background);
+
+  .slide-inner-row {
+    background-color: var(--second-slide-background);
+  }
+
+  .illustration-col {
+    padding: 0px 10%;
+  }
+}
+
+.third-slide {
+  --vector-decoration-fill: var(--third-slide-background);
+
+  .slide-inner-row {
+    background-color: var(--third-slide-background);
+  }
+
+  .illustration-col {
+    padding: 0px 15%;
+  }
+}
+
+.last-slide {
+  --vector-decoration-fill: var(--last-slide-background);
+
+  .slide-inner-row {
+    background-color: var(--last-slide-background);
+    // In the last slide .swiper-pagination is hidden
+    border-width: 0px;
+  }
+
+  .illustration-col {
+    padding: 0px 10%;
+  }
+
+  .info-col {
+    padding: 20px;
+
+    .info-outer {
+      height: 100%;
+      align-items: flex-end;
+      flex-direction: column;
+
+      .info-wrapper {
+        margin: -20px 0px 0px;
+      }
+
+      .call-to-actions-wrapper {
+        max-height: fit-content;
+      }
+    }
+
+    .get-started-button {
+      --background: var(--ion-color-primary);
+      --background-activated: var(--ion-color-primary-shade);
+      --background-focused: var(--ion-color-primary-shade);
+      --color: var(--ion-color-primary-contrast);
+      --color-activated: var(--ion-color-primary-contrast);
+      --color-focused: var(--ion-color-primary-contrast);
+    }
+
+    .alt-call-to-action-row {
+      align-items: center;
+      justify-content: center;
+
+      .cta-leading-text {
+        color: var(--ion-color-medium);
+        font-size: 16px;
+      }
+
+      .login-button {
+        --color: var(--ion-color-secondary);
+      }
+    }
+  }
+}
+
+:host(.first-slide-active) {
+  .skip-walkthrough-button {
+    visibility: hidden;
+  }
+}
+
+:host(.last-slide-active) {
+  .walkthrough-slides {
+    .swiper-pagination {
+      display: none;
+    }
+  }
+
+  .skip-walkthrough-button {
+    visibility: hidden;
+  }
+}

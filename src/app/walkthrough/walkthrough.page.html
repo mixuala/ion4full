@@ -1,0 +1,118 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-buttons slot="end">
+      <ion-button class="skip-walkthrough-button" fill="clear" (click)="skipWalkthrough()">skip</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-slides class="walkthrough-slides" pager="true">
+    <ion-slide class="first-slide illustration-and-decoration-slide">
+      <ion-row class="slide-inner-row">
+        <ion-col class="illustration-col">
+          <app-preload-image class="add-spinner" [ratio]="{w:924, h:819}" [src]="'./assets/images/walkthrough-illustration-1.svg'"></app-preload-image>
+        </ion-col>
+        <ion-col class="decoration-col">
+          <!-- http://jxnblk.com/paths/?d=M0%200%20V5%20H5%20C25%205%2025%2020%2045%2020%20S65%205%2085%205%20H90%20V0%20Z -->
+          <svg class="vector-decoration" version="1.1" xmlns="http://www.w3.org/2000/svg" height="100" width="100%" viewBox="0 0 90 20" preserveAspectRatio="none">
+            <path d="M0 0 V5 H5 C25 5 25 20 45 20 S65 5 85 5 H90 V0 Z" fill="var(--vector-decoration-fill)" stroke="transparent"/>
+          </svg>
+        </ion-col>
+        <ion-col class="info-col">
+          <div class="info-wrapper">
+            <h3 class="info-title">This App is built with Ionic 4</h3>
+            <p class="info-paragraph">
+              It was created by the <b>IonicThemes</b> team and it's only a lite version of the upcoming Ionic 4 Template.
+            </p>
+            <p class="info-paragraph">
+              You will love Ionic 4, and if you get lost, remember we have lots of tutorials to help you.
+            </p>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-slide>
+    <ion-slide class="second-slide illustration-and-decoration-slide">
+      <ion-row class="slide-inner-row">
+        <ion-col class="illustration-col">
+          <app-preload-image class="add-spinner" [ratio]="{w:1010, h:840}" [src]="'./assets/images/walkthrough-illustration-2.svg'"></app-preload-image>
+        </ion-col>
+        <ion-col class="decoration-col">
+          <!-- http://jxnblk.com/paths/?d=M0%200%20L64%200%20L64%2024%20Q56%2024%2048%2016%20Q34%200%2022%2010%20Q10%2022%200%208%20Z -->
+          <svg class="vector-decoration" version="1.1" xmlns="http://www.w3.org/2000/svg" height="100" width="100%" viewBox="0 0 64 24" preserveAspectRatio="none">
+            <path d="M0 0 L64 0 L64 24 Q56 24 48 16 Q34 0 22 10 Q10 22 0 8 Z" fill="var(--vector-decoration-fill)" stroke="transparent"/>
+          </svg>
+        </ion-col>
+        <ion-col class="info-col">
+          <div class="info-wrapper">
+            <h3 class="info-title">How to use this template?</h3>
+            <p class="info-paragraph">
+              We want to help you build better and faster Ionic apps. We have put a lot of effort building and styling each component of this template.
+            </p>
+            <p class="info-paragraph">
+              You are free to reuse and modify every component of this template.
+            </p>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-slide>
+    <ion-slide class="third-slide illustration-and-decoration-slide">
+      <ion-row class="slide-inner-row">
+        <ion-col class="illustration-col">
+          <app-preload-image class="add-spinner" [ratio]="{w:1, h:1}" [src]="'./assets/images/walkthrough-illustration-3.svg'"></app-preload-image>
+        </ion-col>
+        <ion-col class="decoration-col">
+          <!-- http://jxnblk.com/paths/?d=M0%200%20V5%20H5%20C19%205%2025%2014%2032%2014%20S45%205%2059%205%20H64%20V0%20Z -->
+          <svg class="vector-decoration" version="1.1" xmlns="http://www.w3.org/2000/svg" height="100" width="100%" viewBox="0 0 64 14" preserveAspectRatio="none">
+            <path d="M0 0 V5 H5 C19 5 25 14 32 14 S45 5 59 5 H64 V0 Z" fill="var(--vector-decoration-fill)" stroke="transparent"/>
+          </svg>
+        </ion-col>
+        <ion-col class="info-col">
+          <div class="info-wrapper">
+            <h3 class="info-title">Which components are available in this lite version?</h3>
+            <p class="info-paragraph">
+              Notifications, Profile, SideMenu, Authentication, Getting Started, Categories, <b>Travel</b> and <b>Fashion</b> Listings and more!
+            </p>
+            <p class="info-paragraph">
+              Once we release the complete version of this template all listings will be available with lots of content and details pages.
+            </p>
+          </div>
+        </ion-col>
+      </ion-row>
+    </ion-slide>
+    <ion-slide class="last-slide illustration-and-decoration-slide">
+      <ion-row class="slide-inner-row">
+        <ion-col class="illustration-col">
+          <app-preload-image class="add-spinner" [ratio]="{w:1010, h:840}" [src]="'./assets/images/walkthrough-illustration-4.svg'"></app-preload-image>
+        </ion-col>
+        <ion-col class="decoration-col">
+          <!-- http://jxnblk.com/paths/?d=M0%200%20L64%200%20L64%2010%20Q56%2024%2046%2012%20Q34%200%2026%208%20Q10%2022%200%208%20Z -->
+          <svg class="vector-decoration" version="1.1" xmlns="http://www.w3.org/2000/svg" height="100" width="100%" viewBox="0 0 64 24" preserveAspectRatio="none">
+            <path d="M0 0 L64 0 L64 10 Q56 24 46 12 Q34 0 26 8 Q10 22 0 8 Z" fill="var(--vector-decoration-fill)" stroke="transparent"/>
+          </svg>
+        </ion-col>
+        <ion-col class="info-col">
+          <ion-row class="info-outer">
+            <ion-col>
+              <div class="info-wrapper">
+                <h3 class="info-title">It's time to start</h3>
+                <p class="info-paragraph">
+                  Hope you like this Ionic v4 template and please let us know your feedback to shape the final release!
+                </p>
+              </div>
+            </ion-col>
+            <ion-col class="call-to-actions-wrapper">
+              <ion-button class="get-started-button" expand="block" href="getting-started">Get Started</ion-button>
+              <ion-row class="alt-call-to-action-row">
+                <span class="cta-leading-text">Already have an account?</span>
+                <ion-button class="login-button" fill="clear" href="auth/login">
+                  Login here
+                </ion-button>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </ion-slide>
+  </ion-slides>
+</ion-content>

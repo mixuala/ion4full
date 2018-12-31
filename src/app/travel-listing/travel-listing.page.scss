@@ -1,0 +1,134 @@
+.listing-item {
+  --shell-color: #00AFFF;
+  --shell-color-rgb: 0,175,255;
+
+  padding: 0px 0px 10px;
+
+  .image-row {
+    --ion-grid-column-padding: 0px;
+
+    app-background-image {
+      --loading-background: rgba(var(--shell-color-rgb), .10);
+      --overlay-background: rgba(var(--ion-color-dark-rgb), .60);
+    }
+
+    .content-inside-item-image {
+      padding: 0px 14%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+
+      .item-icon {
+        width: 50px;
+        align-self: center;
+
+        app-preload-image {
+          --loading-background: rgba(var(--shell-color-rgb), .15);
+        }
+      }
+
+      .item-name {
+        app-text-shell {
+          --c-bg-color: rgba(var(--shell-color-rgb), .25);
+        }
+
+        margin: 0px;
+        padding: 8px 0px;
+        border-bottom: 2px solid var(--ion-color-lightest);
+        text-transform: uppercase;
+        font-size: 20px;
+        font-weight: 900;
+        text-align: center;
+
+        .name-anchor {
+          color: var(--ion-color-light);
+          display: block;
+        }
+      }
+
+      .item-tagline {
+        app-text-shell {
+          --c-bg-color: rgba(var(--shell-color-rgb), .20);
+        }
+
+        color: var(--ion-color-light);
+        text-transform: uppercase;
+        font-size: 16px;
+        font-weight: 400;
+        font-style: italic;
+        margin: 12px 0px 0px;
+        text-align: center;
+      }
+    }
+  }
+
+  .info-row {
+    padding: 23px 18px 28px;
+
+    --ion-grid-column-padding: 0px;
+
+    .main-info-col {
+      padding-right: 8px;
+    }
+
+    .item-name {
+      app-text-shell {
+        --c-line-height: 18px;
+      }
+
+      margin: 0px 0px 12px;
+      text-transform: capitalize;
+      font-size: 16px;
+
+      .name-anchor {
+        color: var(--ion-color-dark);
+        display: block;
+      }
+    }
+
+    .item-description {
+      app-text-shell {
+        --c-line-height: 12px;
+      }
+
+      margin: 0px 0px 8px;
+      color: var(--ion-color-dark-shade);
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .item-address {
+      app-text-shell {
+        --c-line-height: 10px;
+      }
+
+      margin: 0px;
+      color: var(--ion-color-dark-tint);
+      font-size: 12px;
+    }
+
+    .item-rating {
+      text-align: center;
+      color: var(--shell-color);
+      justify-content: flex-end;
+
+      .rating-value {
+        font-size: 14px;
+        margin-left: 4px;
+      }
+    }
+
+    .item-reviews {
+      text-align: center;
+      color: var(--shell-color);
+      margin-top: 12px;
+      justify-content: flex-end;
+
+      .reviews-count {
+        font-size: 14px;
+        margin-left: 4px;
+      }
+    }
+  }
+}

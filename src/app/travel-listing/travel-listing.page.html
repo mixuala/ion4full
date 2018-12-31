@@ -1,0 +1,73 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="app/tabs/(home:categories)"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Travel Listing</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="listing?.items">
+    <div class="listing-item" *ngFor="let item of listing.items">
+      <ion-row class="image-row">
+        <ion-col size="12">
+          <app-background-image class="add-overlay" [src]="item.image">
+            <app-fill-container [ratio]="{w:3, h:2}">
+              <div class="content-inside-item-image">
+                <div class="item-icon">
+                  <app-preload-image [ratio]="{w: 1, h: 1}" [src]="item.icon"></app-preload-image>
+                </div>
+                <h2 class="item-name">
+                  <ion-anchor class="name-anchor" href="coming-soon">
+                    <app-text-shell [data]="item.name" [attr.element]="'h2'"></app-text-shell>
+                  </ion-anchor>
+                </h2>
+                <h4 class="item-tagline">
+                  <app-text-shell [data]="item.category" [attr.element]="'h4'"></app-text-shell>
+                </h4>
+              </div>
+            </app-fill-container>
+          </app-background-image>
+        </ion-col>
+      </ion-row>
+      <ion-row class="info-row">
+        <ion-col class="main-info-col" size="10">
+          <h3 class="item-name">
+            <ion-anchor class="name-anchor" href="coming-soon">
+              <app-text-shell [data]="(item?.name && item?.category) ? (item.name + ' - ' + item.category) : (item.name)" [attr.element]="'h3'"></app-text-shell>
+            </ion-anchor>
+          </h3>
+          <p class="item-description">
+            <app-text-shell [data]="item.description" [attr.lines]="3"></app-text-shell>
+          </p>
+          <p class="item-address">
+            <app-text-shell [data]="item.address" [attr.lines]="1"></app-text-shell>
+          </p>
+        </ion-col>
+        <ion-col size="2">
+          <ion-row class="item-rating">
+            <ion-col size="5">
+              <ion-icon name="star"></ion-icon>
+            </ion-col>
+            <ion-col size="7">
+              <div class="rating-value">
+                <app-text-shell [data]="item.rating" [attr.lines]="1" class="no-animation"></app-text-shell>
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row class="item-reviews">
+            <ion-col size="5">
+              <ion-icon name="chatbubbles"></ion-icon>
+            </ion-col>
+            <ion-col size="7">
+              <div class="reviews-count">
+                <app-text-shell [data]="item.reviewsCount" [attr.lines]="1" class="no-animation"></app-text-shell>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-col>
+      </ion-row>
+    </div>
+  </ng-container>
+</ion-content>

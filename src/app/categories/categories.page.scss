@@ -1,0 +1,72 @@
+.categories-list {
+  --categories-gutter: 4px;
+  --ion-grid-column-padding: var(--categories-gutter);
+
+  padding: var(--categories-gutter);
+  height: 100%;
+  overflow: scroll;
+
+  // Hide scrollbars: https://stackoverflow.com/a/38994837/1116959
+  -ms-overflow-style: none;  // IE 10+
+  overflow: -moz-scrollbars-none;  // Firefox
+  // Safari and Chrome
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  .category-item {
+    --category-loading-background: #{ rgba(#CCC, .25); };
+    --category-spinner-color: #FFF;
+
+    app-background-image {
+      --loading-background: var(--category-loading-background);
+      --spinner-color: var(--category-spinner-color);
+    }
+
+    .category-anchor {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      // Second version
+      justify-content: flex-start;
+      align-items: flex-start;
+
+      .category-title {
+        margin: 0px;
+        text-transform: uppercase;
+        color: #FFF;
+        font-weight: 500;
+        font-size: 20px;
+        letter-spacing: 2px;
+        padding: 10px;
+        background-color: var(--category-background, #808080);
+      }
+    }
+  }
+
+  .travel-category {
+    --category-background: #00AFFF;
+    --category-loading-background: #{ rgba(#00AFFF, .25); };
+  }
+
+  .fashion-category {
+    --category-background: #cb328f;
+    --category-loading-background: #{ rgba(#cb328f, .25); };
+  }
+
+  .food-category {
+    --category-background: #ebbb00;
+    --category-loading-background: #{ rgba(#ebbb00, .25); };
+  }
+
+  .deals-category {
+    --category-background: #d9453a;
+    --category-loading-background: #{ rgba(#d9453a, .25); };
+  }
+
+  .real-state-category {
+    --category-background: #455b3b;
+    --category-loading-background: #{ rgba(#455b3b, .25); };
+  }
+}

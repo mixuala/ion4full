@@ -1,0 +1,110 @@
+.items-row {
+  padding: 18px 18px 0px;
+
+  .listing-item {
+    --shell-color: #cb328f;
+    --shell-color-rgb: 203,50,143;
+
+    margin-bottom: 18px;
+
+    &:nth-child(odd) {
+      padding-right: 9px;
+    }
+
+    &:nth-child(even) {
+      padding-left: 9px;
+    }
+
+    .item-image {
+      border: 1px solid var(--ion-color-light-shade);
+
+      app-preload-image {
+        --loading-background: rgba(var(--shell-color-rgb), .10);
+      }
+
+      .image-anchor {
+        display: block;
+      }
+    }
+
+    .item-body {
+      --ion-grid-column-padding: 0px;
+
+      padding: 5px 5px;
+      text-align: center;
+
+      .main-info {
+        margin-bottom: 8px;
+
+        .item-name {
+          app-text-shell {
+            --c-line-height: 14px;
+            --c-bg-color: rgba(var(--shell-color-rgb), .25);
+          }
+
+          margin: 0px;
+          font-size: 14px;
+          font-weight: 400;
+
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+
+          .name-anchor {
+            color: var(--ion-color-primary);
+            display: block;
+          }
+        }
+      }
+
+      .secondary-info {
+        align-items: center;
+
+        .price-col {
+          &:first-child {
+            padding-right: 8px;
+            text-align: right;
+
+            &:last-child {
+              text-align: center;
+            }
+          }
+          &:last-child {
+            padding-left: 8px;
+            text-align: left;
+          }
+        }
+
+        .separator {
+          max-width: 0px;
+          border-right: solid 2px var(--ion-color-light-shade);
+          align-self: stretch;
+        }
+
+        .item-sale-price {
+          app-text-shell {
+            --c-line-height: 16px;
+            --c-bg-color: rgba(var(--shell-color-rgb), .20);
+          }
+
+          display: block;
+          font-weight: 400;
+          color: var(--ion-color-secondary);
+          font-size: 16px;
+        }
+
+        .item-original-price {
+          app-text-shell {
+            --c-line-height: 16px;
+            --c-bg-color: rgba(var(--shell-color-rgb), .20);
+          }
+
+          display: block;
+          text-decoration: line-through;
+          font-size: 14px;
+        }
+      }
+
+    }
+  }
+}

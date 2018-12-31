@@ -1,0 +1,189 @@
+// Inspired in: https://stackoverflow.com/a/41096631/1116959
+@function randomNum($min, $max) {
+  $rand: random();
+  $randomNum: $min + floor($rand * (($max - $min) + 1));
+
+  @return $randomNum;
+}
+
+// Inspired in: https://hugogiraudel.com/2013/08/08/advanced-sass-list-functions/
+@function to-string($list, $glue: '', $is-nested: false) {
+  $result: null;
+
+  @for $i from 1 through length($list) {
+    $e: nth($list, $i);
+
+    @if type-of($e) == list {
+      $result: $result#{to-string($e, $glue, true)};
+    } @else {
+      $result: if(
+        $i != length($list) or $is-nested,
+        $result#{$e}#{$glue},
+        $result#{$e}
+      );
+    }
+  }
+
+  @return $result;
+}
+
+@mixin text-shell-background($lines: 1){
+  $line-height: var(--c-line-height, 16px);
+  $line-spacing: var(--c-line-spacing, 3px);
+  $bg-color: var(--c-bg-color, #CCC);
+  $mask-color: var(--c-mask-color, #FFF);
+  $line-bg-color: var(--c-line-bg-color, #FFF);
+  $bg-y-pos: 0px;
+  $rand-width: #{randomNum(85, 95)};
+  $bg-image: 'linear-gradient(to right, ' + $bg-color + ' ' + $rand-width + '% , ' + $mask-color + ' ' + $rand-width + '%)';
+  $bg-position: '0 ' + $bg-y-pos;
+  $bg-size: '100% ' + $line-height;
+  $bg-size-animation-from: '85% ' + $line-height;
+  $bg-size-animation-to: '100% ' + $line-height;
+
+  @if ($lines == 1) {
+    background-image: #{$bg-image};
+    background-position: #{$bg-position};
+    background-size: #{$bg-size};
+    background-repeat: no-repeat;
+
+    animation-direction: alternate;
+    animation-name: animateLine;
+
+    @keyframes animateLine {
+      0%{
+        background-size: #{$bg-size-animation-from};
+      }
+
+      100%{
+        background-size: #{$bg-size-animation-to};
+      }
+    }
+  } @else {
+    @for $i from 2 through $lines {
+      // Add separator between lines
+      $bg-image: append($bg-image, linear-gradient(to right, #{$line-bg-color} 100%, #{$line-bg-color} 100%));
+      // This linear-gradient as separator starts below the last line,
+      // so we have to add $line-height to our y-pos pointer
+      $bg-y-pos: calc((#{$line-height} * (#{$i} - 1)) + (#{$line-spacing} * (#{$i} - 2)));
+      $bg-position: append($bg-position, '0 ' + $bg-y-pos);
+      $bg-size: append($bg-size, '100% ' + $line-spacing);
+      // separator lines have the same initial and end state, thus no animation occurs
+      $bg-size-animation-from: append($bg-size-animation-from, '100% ' + $line-spacing);
+      $bg-size-animation-to: append($bg-size-animation-to, '100% ' + $line-spacing);
+
+      // Add new line
+      // The last line should be narrow than the others
+      @if ($i == $lines) {
+        $rand-width: #{randomNum(30, 50)};
+        $bg-size-animation-from: append($bg-size-animation-from, '55% ' + $line-height);
+      } @else {
+        $rand-width: #{randomNum(60, 80)};
+        $bg-size-animation-from: append($bg-size-animation-from, '75% ' + $line-height);
+      }
+
+      $bg-image: append($bg-image, 'linear-gradient(to right, ' + $bg-color + ' ' + $rand-width + '% , ' + $mask-color + ' ' + $rand-width + '%)');
+      // This new line starts below the prviously added separator,
+      // so we have to add $line-spacing to our y-pos pointer
+      $bg-y-pos: calc((#{$line-height} * (#{$i} - 1)) + (#{$line-spacing} * (#{$i} - 1)));
+      $bg-position: append($bg-position, '0 ' + $bg-y-pos);
+      $bg-size: append($bg-size, '100% ' + $line-height);
+      $bg-size-animation-to: append($bg-size-animation-to, '100% ' + $line-height);
+    }
+
+    background-image: #{to-string($bg-image, ', ')};
+    background-position: #{to-string($bg-position, ', ')};
+    background-size: #{to-string($bg-size, ', ')};
+    background-repeat: no-repeat;
+
+    animation-direction: alternate-reverse;
+    animation-name: animateMultiLine;
+
+    @keyframes animateMultiLine {
+      0%{
+        background-size: #{to-string($bg-size-animation-from, ', ')};
+      }
+
+      100%{
+        background-size: #{to-string($bg-size-animation-to, ', ')};
+      }
+    }
+  }
+
+  min-height: calc((#{$line-height} * #{$lines}) + (#{$line-spacing} * (#{$lines} - 1)));
+
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  animation-duration: 1s;
+}
+
+
+// WIP on gist: https://www.sassmeister.com/gist/fc8790761e3a6d9dc83f7326c1bc6ab4
+// Inspiration for the animation: https://cloudcannon.com/deconstructions/2014/11/15/facebook-content-placeholder-deconstruction.html
+:host {
+  display: block;
+  color: transparent;
+  position: relative;
+  transform-style: preserve-3d;
+  // To fix 1px line misalignment in chrome: https://developer.mozilla.org/en-US/docs/Web/CSS/background-clip
+  // (I also noticed that if I set the color to a solid color instead of having opacity, the issue doesn't happen)
+  background-clip: content-box;
+
+  --c-line-height: 16px;
+  --c-line-spacing: 3px;
+  --c-bg-color: #EEE;
+  --c-mask-color: transparent;
+  --c-line-bg-color: transparent;
+
+  &[element="h1"] {
+    --c-line-height: 32px;
+    --c-bg-color: #CCC;
+  }
+
+  &[element="h2"] {
+    --c-line-height: 28px;
+    --c-bg-color: #DDD;
+  }
+
+  &[element="h3"] {
+    --c-line-height: 24px;
+    --c-bg-color: #DDD;
+  }
+
+  &[element="h4"] {
+    --c-line-height: 20px;
+    --c-bg-color: #DDD;
+  }
+
+  // Default one line text-shell
+  @include text-shell-background(1);
+
+  &[lines="1"] {
+    @include text-shell-background(1);
+  }
+
+  &[lines="2"] {
+    @include text-shell-background(2);
+  }
+
+  &[lines="3"] {
+    @include text-shell-background(3);
+  }
+
+  &[lines="4"] {
+    @include text-shell-background(4);
+  }
+
+  &.text-loaded {
+    background: none;
+    min-height: inherit;
+    color: inherit;
+    // 0 is the default value (see: https://stackoverflow.com/a/15963044/1116959)
+    animation: 0;
+  }
+
+  &.no-animation {
+    animation: 0;
+  }
+}

@@ -1,0 +1,70 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button text="Back"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Log In</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding class="outer-content login-content">
+  <form [formGroup]="loginForm" (ngSubmit)="doLogin()">
+    <ion-list class="form-list" lines="inset">
+      <!-- Email input -->
+      <ion-item>
+        <ion-input type="email" placeholder="Email" formControlName="email" clearInput autocapitalize="off" inputmode="email"></ion-input>
+      </ion-item>
+      <!-- Email input validations-->
+      <div class="error-container" *ngIf="loginForm.get('email').invalid && (loginForm.get('email').dirty || loginForm.get('email').touched)">
+        <span *ngIf="loginForm.get('email').errors.required">
+          Email is required
+        </span>
+        <span *ngIf="loginForm.get('email').errors.pattern">
+          Please enter a valid email address
+        </span>
+      </div>
+
+      <!-- Password input -->
+      <ion-item>
+        <app-show-hide-password>
+          <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+        </app-show-hide-password>
+      </ion-item>
+      <!-- Password input validations-->
+      <div class="error-container" *ngIf="loginForm.get('password').invalid && (loginForm.get('password').dirty || loginForm.get('password').touched)">
+        <span *ngIf="loginForm.get('password').errors.required">
+          Password is required
+        </span>
+      </div>
+    </ion-list>
+
+    <ion-row>
+      <ion-col>
+        <ion-button [disabled]="!loginForm.valid" type="submit" expand="block">Log In</ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="other-options">
+      <ion-col text-left>
+        <ion-button fill="clear" class="forgot-button" (click)="goToForgotPassword()">
+          Forgot Password?
+        </ion-button>
+      </ion-col>
+      <ion-col text-right>
+        <ion-button href="/auth/signup" fill="clear" class="signup-button">
+          Sign Up!
+        </ion-button>
+      </ion-col>
+    </ion-row>
+  </form>
+
+  <p class="auth-divider">
+    Or
+  </p>
+  <div class="social-buttons">
+    <ion-button expand="block" color="facebook" class="facebook-auth-button" (click)="doFacebookLogin()">Log in with Facebook</ion-button>
+    <ion-button expand="block" color="google" class="google-auth-button" (click)="doGoogleLogin()">Log in with Google</ion-button>
+    <ion-button expand="block" color="twitter" class="twitter-auth-button" (click)="doTwitterLogin()">Log in with Twitter</ion-button>
+  </div>
+
+</ion-content>

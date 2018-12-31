@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="app/tabs/(home:categories)"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Fashion Listing</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container *ngIf="listing?.items">
+    <ion-row class="items-row">
+      <ion-col size="6" class="listing-item" *ngFor="let item of listing.items">
+        <div class="item-image">
+          <ion-anchor class="image-anchor" href="coming-soon">
+            <app-preload-image [ratio]="{w: 3, h: 4}" [src]="item.image"></app-preload-image>
+          </ion-anchor>
+        </div>
+        <ion-row class="item-body">
+          <ion-col size="12" class="main-info">
+            <h4 class="item-name">
+              <ion-anchor class="name-anchor" href="coming-soon">
+                <app-text-shell [data]="item.name" [attr.element]="'h4'"></app-text-shell>
+              </ion-anchor>
+            </h4>
+          </ion-col>
+          <ion-col size="12">
+            <ion-row class="secondary-info">
+              <ion-col class="price-col">
+                <span class="item-sale-price">
+                  <app-text-shell [data]="item.salePrice | currency" class="no-animation"></app-text-shell>
+                </span>
+              </ion-col>
+              <ng-container *ngIf="item.price != '0'">
+                <ion-col class="separator">
+                </ion-col>
+                <ion-col class="price-col">
+                  <span class="item-original-price">
+                    <app-text-shell [data]="item.price | currency" class="no-animation"></app-text-shell>
+                  </span>
+                </ion-col>
+              </ng-container>
+            </ion-row>
+          </ion-col>
+        </ion-row>
+      </ion-col>
+    </ion-row>
+  </ng-container>
+</ion-content>

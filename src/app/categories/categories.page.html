@@ -1,0 +1,60 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Categories
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-row class="categories-list">
+    <ion-col class="category-item travel-category" size="12">
+      <app-background-image class="add-spinner" [src]="'./assets/sample-images/categories/travel.jpg'">
+        <app-fill-container [ratio]="{w:75, h:49}">
+          <ion-anchor routerDirection="forward" class="category-anchor" href="app/tabs/(home:travel)">
+            <h2 class="category-title">Travel</h2>
+          </ion-anchor>
+        </app-fill-container>
+      </app-background-image>
+    </ion-col>
+    <ion-col class="category-item fashion-category" size="6">
+      <app-background-image class="add-spinner" [src]="'./assets/sample-images/categories/fashion.jpg'">
+        <app-fill-container [ratio]="{w:1, h:1}">
+          <ion-anchor routerDirection="forward" class="category-anchor" href="app/tabs/(home:fashion)">
+            <h2 class="category-title">Fashion</h2>
+          </ion-anchor>
+        </app-fill-container>
+      </app-background-image>
+    </ion-col>
+    <ion-col class="category-item food-category" size="6">
+      <app-background-image class="add-spinner" [src]="'./assets/sample-images/categories/food.jpg'">
+        <app-fill-container [ratio]="{w:1, h:1}">
+          <ion-anchor routerDirection="forward" class="category-anchor" href="coming-soon">
+            <h2 class="category-title">Food</h2>
+          </ion-anchor>
+        </app-fill-container>
+      </app-background-image>
+    </ion-col>
+    <ion-col class="category-item deals-category" size="12">
+      <app-background-image class="add-spinner" [src]="'./assets/sample-images/categories/deals.png'">
+        <app-fill-container [ratio]="{w:75, h:30}">
+          <ion-anchor routerDirection="forward" class="category-anchor" href="coming-soon">
+            <h2 class="category-title">Deals</h2>
+          </ion-anchor>
+        </app-fill-container>
+      </app-background-image>
+    </ion-col>
+    <ion-col class="category-item real-state-category" size="12">
+      <app-background-image class="add-spinner" [src]="'./assets/sample-images/categories/real-state.jpg'">
+        <app-fill-container [ratio]="{w:75, h:30}">
+          <ion-anchor routerDirection="forward" class="category-anchor" href="coming-soon">
+            <h2 class="category-title">Real State</h2>
+          </ion-anchor>
+        </app-fill-container>
+      </app-background-image>
+    </ion-col>
+  </ion-row>
+</ion-content>

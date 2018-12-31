@@ -1,0 +1,16 @@
+app-custom-checkbox {
+  display: block;
+
+  .custom-checkbox-wrapper {
+    position: relative;
+    width: 100%;
+
+    ion-checkbox {
+      position: absolute;
+      top: 0px;
+      bottom: 0px;
+      left: 0px;
+      right: 0px;
+    }
+  }
+}
