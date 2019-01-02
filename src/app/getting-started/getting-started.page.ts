@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, OnInit, AfterViewInit, ViewChild, HostBinding } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 
-import { Slides, MenuController } from '@ionic/angular';
+import { IonSlides, MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-getting-started',
@@ -10,7 +10,7 @@ import { Slides, MenuController } from '@ionic/angular';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class GettingStartedPage implements OnInit, AfterViewInit {
-  @ViewChild(Slides) slides: Slides;
+  @ViewChild(IonSlides) slides: IonSlides;
   @HostBinding('class.last-slide-active') isLastSlide = false;
 
   gettingStartedForm: FormGroup;

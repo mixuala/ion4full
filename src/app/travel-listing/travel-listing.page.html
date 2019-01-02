@@ -19,9 +19,9 @@
                   <app-preload-image [ratio]="{w: 1, h: 1}" [src]="item.icon"></app-preload-image>
                 </div>
                 <h2 class="item-name">
-                  <ion-anchor class="name-anchor" href="coming-soon">
+                  <a class="name-anchor" href="coming-soon">
                     <app-text-shell [data]="item.name" [attr.element]="'h2'"></app-text-shell>
-                  </ion-anchor>
+                  </a>
                 </h2>
                 <h4 class="item-tagline">
                   <app-text-shell [data]="item.category" [attr.element]="'h4'"></app-text-shell>
@@ -34,9 +34,9 @@
       <ion-row class="info-row">
         <ion-col class="main-info-col" size="10">
           <h3 class="item-name">
-            <ion-anchor class="name-anchor" href="coming-soon">
+            <a class="name-anchor" href="coming-soon">
               <app-text-shell [data]="(item?.name && item?.category) ? (item.name + ' - ' + item.category) : (item.name)" [attr.element]="'h3'"></app-text-shell>
-            </ion-anchor>
+            </a>
           </h3>
           <p class="item-description">
             <app-text-shell [data]="item.description" [attr.lines]="3"></app-text-shell>

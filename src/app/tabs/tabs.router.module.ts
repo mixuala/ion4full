@@ -25,12 +25,18 @@ const routes: Routes = [
       {
         path: 'categories',
         outlet: 'home',
-        component: CategoriesPage
+        children:[{
+          path: '',
+          loadChildren: '../categories/categories.module#CategoriesPageModule'
+        }]
       },
       {
         path: 'fashion',
         outlet: 'home',
-        component: FashionListingPage,
+        children:[{
+          path: '',
+          loadChildren: '../fashion-listing/fashion-listing.module#FashionListingPageModule'
+        }],
         resolve: {
           data: FashionListingResolver
         }
@@ -38,7 +44,10 @@ const routes: Routes = [
       {
         path: 'travel',
         outlet: 'home',
-        component: TravelListingPage,
+        children:[{
+          path: '',
+          loadChildren: '../travel-listing/travel-listing.module#TravelListingPageModule'
+        }],
         resolve: {
           data: TravelListingResolver
         }
@@ -46,12 +55,18 @@ const routes: Routes = [
       {
         path: 'profile',
         outlet: 'profile',
-        component: ProfilePage
+        children:[{
+          path: '',
+          loadChildren: '../profile/profile.module#ProfilePageModule'
+        }]
       },
       {
         path: 'notifications',
         outlet: 'notifications',
-        component: NotificationsPage,
+        children:[{
+          path: '',
+          loadChildren: '../notifications/notifications.module#NotificationsPageModule'
+        }],
         resolve: {
          data: NotificationsResolver,
        }
@@ -60,7 +75,8 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/tabs/(home:categories)',
+    // redirectTo: '/tabs/(home:categories)',
+    redirectTo: '/tabs/categories',
     pathMatch: 'full'
   }
 ];

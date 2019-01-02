@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ionicthemes.ionic4fullapp" version="0.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Ionic4FullApp</name>
+<widget id="com.snaphappi.mappi4" version="0.1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>Mappi4</name>
     <description>The most advanced and complete Mobile and PWA starter app template</description>
-    <author email="hi@ionicthemes.com" href="https://ionicthemes.com">IonicThemes</author>
+    <author email="hi@snaphappi.com" href="">Snappi</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

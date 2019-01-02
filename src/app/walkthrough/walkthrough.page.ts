@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit, AfterViewInit, ViewChild, HostBinding } from '@angular/core';
 
-import { Slides, MenuController } from '@ionic/angular';
+import { IonSlides, MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-walkthrough',
@@ -9,7 +9,7 @@ import { Slides, MenuController } from '@ionic/angular';
   encapsulation: ViewEncapsulation.ShadowDom
 })
 export class WalkthroughPage implements OnInit, AfterViewInit {
-  @ViewChild(Slides) slides: Slides;
+  @ViewChild(IonSlides) slides: IonSlides;
   @HostBinding('class.first-slide-active') isFirstSlide = true;
   @HostBinding('class.last-slide-active') isLastSlide = false;
 
