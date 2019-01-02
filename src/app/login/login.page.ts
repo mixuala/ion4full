@@ -30,7 +30,8 @@ export class LoginPage implements OnInit {
 
   doLogin(): void {
     console.log('do Log In');
-    this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    // this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    this.router.navigate(['app/tabs/categories']);
   }
 
   goToForgotPassword(): void {
@@ -39,15 +40,18 @@ export class LoginPage implements OnInit {
 
   doFacebookLogin(): void {
     console.log('facebook login');
-    this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    // this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    this.router.navigate(['app/tabs/categories']);
   }
   doGoogleLogin(): void {
     console.log('google login');
-    this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    // this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    this.router.navigate(['app/tabs/categories']);
   }
   doTwitterLogin(): void {
     console.log('twitter login');
-    this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    // this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    this.router.navigate(['app/tabs/categories']);
   }
 
 }

@@ -24,7 +24,7 @@ const routes: Routes = [
     children: [
       {
         path: 'categories',
-        outlet: 'home',
+        // outlet: 'home',
         children:[{
           path: '',
           loadChildren: '../categories/categories.module#CategoriesPageModule'
@@ -32,7 +32,7 @@ const routes: Routes = [
       },
       {
         path: 'fashion',
-        outlet: 'home',
+        // outlet: 'home',
         children:[{
           path: '',
           loadChildren: '../fashion-listing/fashion-listing.module#FashionListingPageModule'
@@ -43,7 +43,7 @@ const routes: Routes = [
       },
       {
         path: 'travel',
-        outlet: 'home',
+        // outlet: 'home',
         children:[{
           path: '',
           loadChildren: '../travel-listing/travel-listing.module#TravelListingPageModule'
@@ -54,7 +54,7 @@ const routes: Routes = [
       },
       {
         path: 'profile',
-        outlet: 'profile',
+        // outlet: 'profile',
         children:[{
           path: '',
           loadChildren: '../profile/profile.module#ProfilePageModule'
@@ -62,7 +62,7 @@ const routes: Routes = [
       },
       {
         path: 'notifications',
-        outlet: 'notifications',
+        // outlet: 'notifications',
         children:[{
           path: '',
           loadChildren: '../notifications/notifications.module#NotificationsPageModule'
