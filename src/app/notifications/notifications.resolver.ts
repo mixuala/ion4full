@@ -7,7 +7,7 @@ export class NotificationsResolver implements Resolve<any> {
 
   constructor(private notificationsService: NotificationsService) { }
 
-    resolve() {
+  resolve() {
 
     return new Promise((resolve, reject) => {
 

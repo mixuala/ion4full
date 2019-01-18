@@ -13,17 +13,17 @@ export class AppComponent {
   appPages = [
     {
       title: 'Categories',
-      url: '/app/tabs/(home:categories)',
+      url: '/app/tabs/categories',
       icon: 'list-box'
     },
     {
       title: 'Profile',
-      url: 'app/tabs/(profile:profile)',
+      url: 'app/tabs/profile',
       icon: 'person'
     },
     {
       title: 'Notifications',
-      url: 'app/tabs/(notifications:notifications)',
+      url: 'app/tabs/notifications',
       icon: 'notifications'
     }
   ];

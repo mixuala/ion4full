@@ -49,20 +49,20 @@ export class SignupPage implements OnInit {
 
   doSignup(): void {
     console.log('do sign up');
-    this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    this.router.navigate(['app/tabs/categories']);
   }
 
   doFacebookLogin(): void {
     console.log('facebook login');
-    this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    this.router.navigate(['app/tabs/categories']);
   }
   doGoogleLogin(): void {
     console.log('google login');
-    this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    this.router.navigate(['app/tabs/categories']);
   }
   doTwitterLogin(): void {
     console.log('twitter login');
-    this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+    this.router.navigate(['app/tabs/categories']);
   }
 
 }

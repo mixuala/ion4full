@@ -16,3 +16,9 @@ npm uninstall @ionic/ng-toolkit
 npm uninstall @ionic/schematics-angular
 
 ```
+
+
+```
+# update to ionic 4.0.0-rc.2
+npm install --save @ionic/angular@4.0.0-rc.2
+ng update @angular/cli @angular/core @angular-devkit/core @angular-devkit/schematics

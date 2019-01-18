@@ -110,3 +110,10 @@ html.md {
   // md
   --header-height: 56px;
 }
+
+
+
+// patch CSS changes for >=4.0.0-rc.0
+a {
+  text-decoration: none;
+}
