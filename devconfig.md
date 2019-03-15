@@ -1,24 +1,16 @@
 
 > ionic info 
 ```
-   Ionic Framework               : @ionic/angular 4.0.0-rc.0
-   @angular-devkit/build-angular : 0.11.4
-   @angular-devkit/schematics    : 7.1.4
-   @angular/cli                  : 7.1.4
-   @ionic/angular-toolkit        : 1.2.2
+   ionic (Ionic CLI)             : 4.12.0 (/Users/michael/.nvm/versions/node/v8.9.4/lib/node_modules/ionic)
+   Ionic Framework               : @ionic/angular 4.1.1
+   @angular-devkit/build-angular : 0.13.6
+   @angular-devkit/schematics    : 7.2.4
+   @angular/cli                  : 7.3.6
+   @ionic/angular-toolkit        : 1.4.0
 ```
 
 ```
 npm install
-
-// installed globally
-npm uninstall @ionic/ng-toolkit
-npm uninstall @ionic/schematics-angular
+ng add @angular/pwa
 
 ```
-
-
-```
-# update to ionic 4.0.0-rc.2
-npm install --save @ionic/angular@4.0.0-rc.2
-ng update @angular/cli @angular/core @angular-devkit/core @angular-devkit/schematics
