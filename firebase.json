@@ -6,13 +6,9 @@
       "**/.*",
       "**/node_modules/**"
     ],
-    "rewrites": [ {
-      "source": "/**",
-      "destination": "/index.html"
-    } ],
     "headers": [
       {
-        "source": "/www/**",
+        "source": "/build/app/**",
         "headers": [
           {
             "key": "Cache-Control",

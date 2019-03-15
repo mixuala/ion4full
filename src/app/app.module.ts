@@ -12,8 +12,11 @@ import { AppComponent } from './app.component';
 import { ComponentsModule } from './components/components.module';
 
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 import { environment } from '../environments/environment';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,7 +26,9 @@ import { environment } from '../environments/environment';
     IonicModule.forRoot(),
     AppRoutingModule,
     ComponentsModule,
-    ServiceWorkerModule.register('/ngsw-worker.js', { enabled: environment.production })
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireMessagingModule,
+    ServiceWorkerModule.register('combined-sw.js', { enabled: environment.production })
   ],
   providers: [
     StatusBar,
