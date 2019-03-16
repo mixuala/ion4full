@@ -15,8 +15,8 @@
       <app-preload-image class="user-avatar add-spinner" [ratio]="{w:1, h:1}" [src]="'./assets/sample-images/notifications/100x100Notification2.jpg'"></app-preload-image>
     </ion-col>
     <ion-col class="user-info-wrapper" size="8">
-      <h3 class="user-name">Claire Hale</h3>
-      <h5 class="user-handle">@clairehale</h5>
+      <h3 class="user-name">{{user?.displayName}}</h3>
+      <h5 class="user-handle">{{user?.email}}</h5>
     </ion-col>
     <ion-col class="user-stats-wrapper" size="6">
       <span class="user-stat-value">1553</span>

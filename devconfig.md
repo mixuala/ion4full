@@ -14,3 +14,10 @@ npm install
 ng add @angular/pwa
 
 ```
+
+
+# adding Firebase
+> https://ionicthemes.com/tutorials/about/building-a-ionic-firebase-app-step-by-step
+```
+npm install @angular/fire firebase --save
+```

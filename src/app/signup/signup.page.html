@@ -46,10 +46,10 @@
           <ion-input type="password" placeholder="Confirm password" formControlName="confirm_password"></ion-input>
         </app-show-hide-password>
       </ion-item>
-      <!-- Password input validations-->
-      <div class="error-container" *ngIf="signupForm.get('confirm_password').invalid && (signupForm.get('confirm_password').dirty || signupForm.get('confirm_password').touched)">
+      <!-- Confirm Password input validations-->
+      <div class="error-container" *ngIf="signupForm.get('confirm_password').invalid && (signupForm.get('confirm_password')!=signupForm.get('password')) && (signupForm.get('confirm_password').dirty || signupForm.get('confirm_password').touched)">
         <span *ngIf="signupForm.get('confirm_password').errors.required">
-          Password is required
+          Password does not match
         </span>
       </div>
 
@@ -58,6 +58,8 @@
     <ion-row>
       <ion-col>
         <ion-button [disabled]="!signupForm.valid" type="submit" expand="block">Sign Up</ion-button>
+        <label class="error-message">{{errorMessage}}</label>
+        <label class="success-message">{{successMessage}}</label>
       </ion-col>
     </ion-row>
 

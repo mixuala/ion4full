@@ -3,6 +3,8 @@ import { Validators, FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MenuController } from '@ionic/angular';
 
+import { AuthService } from '../services/auth.service';
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -10,11 +12,17 @@ import { MenuController } from '@ionic/angular';
 })
 export class LoginPage implements OnInit {
   loginForm: FormGroup;
+  errorMessage: string = '';
 
   constructor(
+    private authService: AuthService,
     public router: Router,
     public menu: MenuController
   ) {
+  }
+
+  ngOnInit() {
+    this.menu.enable(false);
     this.loginForm = new FormGroup({
       'email': new FormControl('test@test.com', [
         Validators.required,
@@ -24,14 +32,17 @@ export class LoginPage implements OnInit {
     });
   }
 
-  ngOnInit() {
-    this.menu.enable(false);
-  }
-
   doLogin(): void {
-    console.log('do Log In');
-    // this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
-    this.router.navigate(['app/tabs/categories']);
+    const value = this.loginForm.value;
+    this.authService.doLogin(value)
+    .then(res => {
+      // this.router.navigate(['app/tabs/', { outlets: {home: [ 'categories' ]} }]);
+      console.log("doLogin", res)
+      this.router.navigate(['app/tabs/categories']);
+    }, err => {
+      this.errorMessage = err.message;
+      console.log(err)
+    })
   }
 
   goToForgotPassword(): void {

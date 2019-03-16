@@ -17,6 +17,11 @@ import { AngularFireMessagingModule } from '@angular/fire/messaging';
 
 import { environment } from '../environments/environment';
 
+import { AngularFirestoreModule, FirestoreSettingsToken } from '@angular/fire/firestore';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { FirebaseService } from './services/firebase.service';
+import { AuthService } from './services/auth.service';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -27,13 +32,17 @@ import { environment } from '../environments/environment';
     AppRoutingModule,
     ComponentsModule,
     AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule, // imports firebase/firestore
+    AngularFireAuthModule, // imports firebase/auth
     AngularFireMessagingModule,
     ServiceWorkerModule.register('combined-sw.js', { enabled: environment.production })
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    FirebaseService,
+    AuthService,
   ],
   bootstrap: [AppComponent]
 })

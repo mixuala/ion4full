@@ -1,11 +1,22 @@
 import { IonicModule } from '@ionic/angular';
-import { RouterModule } from '@angular/router';
+import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { ProfilePage } from './profile.page';
+import { ProfileResolver } from './profile.resolver';
 import { ComponentsModule } from '../components/components.module';
+
+const routes: Routes = [
+  {
+    path: '',
+    component: ProfilePage,
+    resolve: {
+      data: ProfileResolver
+    }
+  }
+];
 
 @NgModule({
   imports: [
@@ -13,8 +24,11 @@ import { ComponentsModule } from '../components/components.module';
     CommonModule,
     FormsModule,
     ComponentsModule,
-    RouterModule.forChild([{ path: '', component: ProfilePage }])
+    RouterModule.forChild( routes )
   ],
-  declarations: [ProfilePage]
+  declarations: [ProfilePage],
+  providers: [
+    ProfileResolver
+  ]
 })
 export class ProfilePageModule {}
