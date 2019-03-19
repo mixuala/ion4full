@@ -15,13 +15,12 @@
         <ion-input type="email" placeholder="Email" formControlName="email" clearInput autocapitalize="off" inputmode="email"></ion-input>
       </ion-item>
       <!-- Email input validations-->
-      <div class="error-container" *ngIf="loginForm.get('email').invalid && (loginForm.get('email').dirty || loginForm.get('email').touched)">
-        <span *ngIf="loginForm.get('email').errors.required">
-          Email is required
-        </span>
-        <span *ngIf="loginForm.get('email').errors.pattern">
-          Please enter a valid email address
-        </span>
+      <div class="error-container">
+        <ng-container *ngFor="let validation of validation_messages.email">
+          <div class="error-message" *ngIf="loginForm.get('email').hasError(validation.type) && (loginForm.get('email').dirty || loginForm.get('email').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
       </div>
 
       <!-- Password input -->
@@ -31,16 +30,20 @@
         </app-show-hide-password>
       </ion-item>
       <!-- Password input validations-->
-      <div class="error-container" *ngIf="loginForm.get('password').invalid && (loginForm.get('password').dirty || loginForm.get('password').touched)">
-        <span *ngIf="loginForm.get('password').errors.required">
-          Password is required
-        </span>
+      <div class="error-container">
+        <ng-container *ngFor="let validation of validation_messages.password">
+          <div class="error-message" *ngIf="loginForm.get('password').hasError(validation.type) && (loginForm.get('password').dirty || loginForm.get('password').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
       </div>
+
     </ion-list>
 
     <ion-row>
       <ion-col>
         <ion-button [disabled]="!loginForm.valid" type="submit" expand="block">Log In</ion-button>
+        <label class="error-message">{{errorMessage}}</label>
       </ion-col>
     </ion-row>
 

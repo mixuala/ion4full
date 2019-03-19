@@ -6,6 +6,7 @@ import { ModalController, MenuController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 import { TermsOfServicePage } from '../terms-of-service/terms-of-service.page';
 import { PrivacyPolicyPage } from '../privacy-policy/privacy-policy.page';
+import { PasswordValidator, PhoneValidator, UsernameValidator,  } from './signup.validators';
 
 @Component({
   selector: 'app-signup',
@@ -16,6 +17,34 @@ export class SignupPage implements OnInit {
   signupForm: FormGroup;
   errorMessage: string = '';
   successMessage: string = '';
+
+  validation_messages = {
+    'username': [
+      // unused
+      { type: 'required', message: 'Username is required' },
+      { type: 'minlength', message: 'Username must be at least 5 characters long' },
+      { type: 'maxlength', message: 'Username cannot be more than 25 characters long' },
+      { type: 'pattern', message: 'Your username must contain only numbers and letters' },
+      { type: 'validUsername', message: 'Your username has already been taken' }
+    ],
+    'email': [
+      { type: 'required', message: 'Email is required' },
+      { type: 'pattern', message: 'Please enter a valid email.' },
+      { type: 'email', message: 'Please enter a valid email.' },
+    ],
+    'confirm_password': [
+      { type: 'required', message: 'Confirm password is required' },
+      { type: 'areEqual', message: 'Passwords do not match' }
+    ],
+    'password': [
+      { type: 'required', message: 'Password is required' },
+      { type: 'minlength', message: 'Password must be at least 6 characters long' },
+      { type: 'pattern', message: 'Your password must contain at least one uppercase, one lowercase, and one number' }
+    ],
+    'terms': [
+      { type: 'pattern', message: 'You must accept terms and conditions' }
+    ]
+  }
 
   constructor(
     private authService: AuthService,
@@ -28,9 +57,17 @@ export class SignupPage implements OnInit {
   ngOnInit() {
     this.menu.enable(false);
     this.signupForm = new FormGroup({
+      // 'username': new FormControl('', Validators.compose([
+      //   UsernameValidator.validUsername,
+      //   Validators.maxLength(25),
+      //   Validators.minLength(5),
+      //   Validators.pattern('^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$'),
+      //   Validators.required
+      // ])),
       'email': new FormControl('test@test.com', [
         Validators.required,
-        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+        // Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'),
+        Validators.email,
       ]),
       'password': new FormControl('', [
         Validators.required, 
@@ -38,8 +75,9 @@ export class SignupPage implements OnInit {
       ]),
       'confirm_password': new FormControl('', [
         Validators.required,
-        // TODO: match password
       ])
+    }, (formGroup: FormGroup) => {
+      return PasswordValidator.areEqual(formGroup, ['password', 'confirm_password']);
     });
   }
 
@@ -59,13 +97,8 @@ export class SignupPage implements OnInit {
  }
 
   doSignup(): void {
-    console.log('do sign up');
+    this.errorMessage = null;
     const value = this.signupForm.value;
-    if (value.password != value.confirm_password){
-      this.errorMessage = "Passwords do not match";
-      this.successMessage = "";
-      return
-    }
     this.authService.doRegister(value)
     .then(res => {
       console.log(res);

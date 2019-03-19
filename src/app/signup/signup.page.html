@@ -8,7 +8,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding class="outer-content signup-content">
+<ion-content padding class="outer-content form-content signup-content">
   <!-- <ion-text color="secondary">
     <h2>Create an Account</h2>
   </ion-text> -->
@@ -19,13 +19,12 @@
         <ion-input type="email" placeholder="Email" formControlName="email" clearInput autocapitalize="off" inputmode="email"></ion-input>
       </ion-item>
       <!-- Email input validations-->
-      <div class="error-container" *ngIf="signupForm.get('email').invalid && (signupForm.get('email').dirty || signupForm.get('email').touched)">
-        <span *ngIf="signupForm.get('email').errors.required">
-          Email is required
-        </span>
-        <span *ngIf="signupForm.get('email').errors.pattern">
-          Please enter a valid email address
-        </span>
+      <div class="error-container">
+        <ng-container *ngFor="let validation of validation_messages.email">
+          <div class="error-message" *ngIf="signupForm.get('email').hasError(validation.type) && (signupForm.get('email').dirty || signupForm.get('email').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
       </div>
 
       <!-- Password input -->
@@ -35,11 +34,14 @@
         </app-show-hide-password>
       </ion-item>
       <!-- Password input validations-->
-      <div class="error-container" *ngIf="signupForm.get('password').invalid && (signupForm.get('password').dirty || signupForm.get('password').touched)">
-        <span *ngIf="signupForm.get('password').errors.required">
-          Password is required
-        </span>
+      <div class="error-container">
+        <ng-container *ngFor="let validation of validation_messages.password">
+          <div class="error-message" *ngIf="signupForm.get('password').hasError(validation.type) && (signupForm.get('password').dirty || signupForm.get('password').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
       </div>
+
       <!-- Confirm Password input -->
       <ion-item>
         <app-show-hide-password>
@@ -47,10 +49,12 @@
         </app-show-hide-password>
       </ion-item>
       <!-- Confirm Password input validations-->
-      <div class="error-container" *ngIf="signupForm.get('confirm_password').invalid && (signupForm.get('confirm_password')!=signupForm.get('password')) && (signupForm.get('confirm_password').dirty || signupForm.get('confirm_password').touched)">
-        <span *ngIf="signupForm.get('confirm_password').errors.required">
-          Password does not match
-        </span>
+      <div class="error-container">
+        <ng-container *ngFor="let validation of validation_messages.confirm_password">
+          <div class="error-message" *ngIf="signupForm.get('confirm_password').hasError(validation.type) && (signupForm.get('confirm_password').dirty || signupForm.get('confirm_password').touched)">
+            {{ validation.message }}
+          </div>
+        </ng-container>
       </div>
 
     </ion-list>

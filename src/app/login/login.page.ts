@@ -14,6 +14,18 @@ export class LoginPage implements OnInit {
   loginForm: FormGroup;
   errorMessage: string = '';
 
+  validation_messages = {
+    'email': [
+      { type: 'required', message: 'Email is required.' },
+      { type: 'pattern', message: 'Please enter a valid email.' },
+      { type: 'email', message: 'Please enter a valid email.' },
+    ],
+    'password': [
+      { type: 'required', message: 'Password is required.' },
+      { type: 'minlength', message: 'Password must be at least 6 characters long.' }
+    ]
+  };
+
   constructor(
     private authService: AuthService,
     public router: Router,
@@ -26,13 +38,17 @@ export class LoginPage implements OnInit {
     this.loginForm = new FormGroup({
       'email': new FormControl('test@test.com', [
         Validators.required,
-        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+        // Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$'),
+        Validators.email,,
       ]),
-      'password': new FormControl('', Validators.required)
+      'password': new FormControl('', [
+        Validators.required, 
+      ])
     });
   }
 
   doLogin(): void {
+    this.errorMessage = null;
     const value = this.loginForm.value;
     this.authService.doLogin(value)
     .then(res => {
