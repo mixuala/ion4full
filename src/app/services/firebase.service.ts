@@ -18,7 +18,7 @@ export class FirebaseService {
   ){}
 
   // added for /app/tabs/profile
-  getCurrentUser(){
+  getCurrentUser():Promise<Observable<firebase.User>>{
     return new Promise<any>((resolve, reject) => {
       this.afAuth.user.subscribe(currentUser =>{
         const {email, displayName, uid } = currentUser;
@@ -27,6 +27,31 @@ export class FirebaseService {
       })
     })
   }
+
+  getUsers():Promise<Observable<any>>{
+    return new Promise<any>((resolve, reject) => {
+      this.snapshotChangesSubscription = this.afs.collection('/users').valueChanges();
+      resolve(this.snapshotChangesSubscription);
+    })
+  }
+
+  addUser(value){
+    return new Promise<any>((resolve, reject) => {
+      this.afs.collection('/users').add({
+        name: value.name,
+        surname: value.surname,
+        age: parseInt(value.age)
+      })
+      .then(
+        (res) => {
+          resolve(res)
+        },
+        err => reject(err)
+      )
+    })
+  }
+
+
 
   getTasks(){
     return new Promise<any>((resolve, reject) => {

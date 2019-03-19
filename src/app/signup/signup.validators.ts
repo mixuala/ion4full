@@ -55,6 +55,10 @@ export class PasswordValidator {
     }
 
     if (valid) {
+      keys.forEach( key=>{
+        const control = <FormControl>formGroup.controls[key];
+        control.setErrors( null ); 
+      });
       return null;
     }
 

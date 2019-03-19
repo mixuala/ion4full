@@ -34,7 +34,8 @@ export class ProfilePage {
     this.route.data.subscribe(routeData => {
       routeData['data'].subscribe(data => {
         loading.dismiss();
-        this.user = data;
+        // NOTE: this is actually the AngularFireAuth.user, not the /users collection
+        this.user = data;  
       })
     })
   }

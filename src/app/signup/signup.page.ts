@@ -8,6 +8,12 @@ import { TermsOfServicePage } from '../terms-of-service/terms-of-service.page';
 import { PrivacyPolicyPage } from '../privacy-policy/privacy-policy.page';
 import { PasswordValidator, PhoneValidator, UsernameValidator,  } from './signup.validators';
 
+
+const VALIDATION = {
+  USERNAME: { MIN: 5, MAX: 25 },
+  PASSWORD: { MIN: 6 },
+}
+
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.page.html',
@@ -22,8 +28,8 @@ export class SignupPage implements OnInit {
     'username': [
       // unused
       { type: 'required', message: 'Username is required' },
-      { type: 'minlength', message: 'Username must be at least 5 characters long' },
-      { type: 'maxlength', message: 'Username cannot be more than 25 characters long' },
+      { type: 'minlength', message: `Username must be at least ${VALIDATION.USERNAME.MIN} characters long` },
+      { type: 'maxlength', message:  `Username cannot be more than ${VALIDATION.USERNAME.MAX} characters long` },
       { type: 'pattern', message: 'Your username must contain only numbers and letters' },
       { type: 'validUsername', message: 'Your username has already been taken' }
     ],
@@ -38,13 +44,15 @@ export class SignupPage implements OnInit {
     ],
     'password': [
       { type: 'required', message: 'Password is required' },
-      { type: 'minlength', message: 'Password must be at least 6 characters long' },
+      { type: 'minlength', message: `Password must be at least ${VALIDATION.PASSWORD.MIN} characters long` },
       { type: 'pattern', message: 'Your password must contain at least one uppercase, one lowercase, and one number' }
     ],
     'terms': [
       { type: 'pattern', message: 'You must accept terms and conditions' }
     ]
   }
+
+  
 
   constructor(
     private authService: AuthService,
@@ -59,8 +67,8 @@ export class SignupPage implements OnInit {
     this.signupForm = new FormGroup({
       // 'username': new FormControl('', Validators.compose([
       //   UsernameValidator.validUsername,
-      //   Validators.maxLength(25),
-      //   Validators.minLength(5),
+      //   Validators.maxLength( VALIDATION.USERNAME.MAX ),
+      //   Validators.minLength( VALIDATION.USERNAME.MIN ),
       //   Validators.pattern('^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]+$'),
       //   Validators.required
       // ])),
@@ -71,7 +79,7 @@ export class SignupPage implements OnInit {
       ]),
       'password': new FormControl('', [
         Validators.required, 
-        Validators.minLength(6),
+        Validators.minLength( VALIDATION.PASSWORD.MIN ),
       ]),
       'confirm_password': new FormControl('', [
         Validators.required,
