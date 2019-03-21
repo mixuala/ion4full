@@ -10,7 +10,8 @@ const routes: Routes = [
   { path: 'app', loadChildren: './tabs/tabs.module#TabsPageModule' },
   { path: 'coming-soon', loadChildren: './coming-soon/coming-soon.module#ComingSoonPageModule' },
   { path: 'page-not-found', loadChildren: './page-not-found/page-not-found.module#PageNotFoundModule' },
-  { path: '**', redirectTo: 'page-not-found' }
+  { path: 'playground', loadChildren: './playground/playground.module#PlaygroundPageModule' },
+  { path: '**', redirectTo: 'page-not-found' },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

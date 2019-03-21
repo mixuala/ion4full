@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Firebase Playground</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item text-wrap>
+      {{ user.email }} {{ user.uid }}
+    </ion-item>
+    <ion-item text-wrap *ngFor="let item of items$ | async">
+      {{ item | json }}
+    </ion-item>
+  </ion-list>
+  <ion-card color="primary">
+    <ion-item text-wrap *ngFor="let item of get$ | async">
+      {{ item | json }}
+    </ion-item>
+  </ion-card>
+</ion-content>

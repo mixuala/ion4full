@@ -17,6 +17,9 @@ import { NotificationsPage } from '../notifications/notifications.page';
 import { NotificationsResolver } from '../notifications/notifications.resolver';
 import { NotificationsService } from '../notifications/notifications.service';
 
+import { PlaygroundPage } from '../playground/playground.page';
+import { PlaygroundResolver } from '../playground/playground.resolver';
+
 const routes: Routes = [
   {
     path: 'tabs',
@@ -69,6 +72,17 @@ const routes: Routes = [
         }],
         resolve: {
          data: NotificationsResolver,
+       }
+      },
+      {
+        path: 'playground',
+        // outlet: 'playground',
+        children:[{
+          path: '',
+          loadChildren: '../playground/playground.module#PlaygroundPageModule'
+        }],
+        resolve: {
+         data: PlaygroundResolver,
        }
       }
     ]

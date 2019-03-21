@@ -15,6 +15,7 @@ import { TravelListingPageModule } from '../travel-listing/travel-listing.module
 import { ProfilePageModule } from '../profile/profile.module';
 
 import { NotificationsPageModule } from '../notifications/notifications.module';
+import { PlaygroundPageModule } from '../playground/playground.module';
 
 @NgModule({
   imports: [
@@ -26,7 +27,8 @@ import { NotificationsPageModule } from '../notifications/notifications.module';
     FashionListingPageModule,
     TravelListingPageModule,
     ProfilePageModule,
-    NotificationsPageModule
+    NotificationsPageModule,
+    PlaygroundPageModule,
   ],
   declarations: [TabsPage]
 })
