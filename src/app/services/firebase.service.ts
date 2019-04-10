@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { 
+  AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument,
+  Action, DocumentSnapshotDoesNotExist, DocumentSnapshotExists
+} from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take,  } from 'rxjs/operators';
 
 
 
@@ -66,6 +69,10 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
     Object.assign(item, { 'ownerid': this.currentUser.uid });
   }
 
+  timestamp(){
+    return firebase.firestore.FieldValue.serverTimestamp();
+  }
+
   get(identifier: string): Observable<T> {
     // this.logger.logVerbose(`[BaseService] get: ${identifier}`);
 
@@ -101,6 +108,8 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
         );
   }
 
+  // TODO: add server timestamps
+  // see: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/#3-CRUD-Operations-with-Server-Timestamps
   add(item: T, isPublic:boolean=false): Promise<T> {
     // this.logger.logVerbose('[BaseService] adding item', item);
     
@@ -120,7 +129,8 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
     return promise;
   }
 
-
+  // TODO: add server timestamps
+  // see: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/#3-CRUD-Operations-with-Server-Timestamps
   update(item: T, isPublic:boolean=false): Promise<T> {
       // this.logger.logVerbose(`[BaseService] updating item ${item.id}`);
 
@@ -128,7 +138,8 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
         if (!isPublic) this.addOwnerid(item);
         const docRef = this.collection
           .doc<T>(item.id)
-          .update(item)  // use update() instead set() to change only a subset of keys
+          // use update() instead set() to change only a subset of keys
+          .update(item)  
           .then(() => {
               resolve({
                   ...(item as any)
@@ -136,6 +147,23 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
           });
       });
       return promise;
+  }
+
+  // see: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/#4-Upsert-Update-or-Create-Method
+  upsert<T>(item: any, isPublic:boolean=false): Promise<T> {
+    if (!isPublic) this.addOwnerid(item);
+    const docRef = this.collection
+      .doc<T>(item.id);
+
+    return docRef.snapshotChanges()
+    .pipe(take(1))
+    .toPromise()
+    .then((snap: Action<DocumentSnapshotDoesNotExist | DocumentSnapshotExists<T>>) => {
+      const upsertAction = snap.payload.exists ? 'update' : 'set';
+      return docRef[upsertAction](item).then(() => {
+        return {...(item as T)}
+      });
+    })
   }
 
   delete(id: string): void {

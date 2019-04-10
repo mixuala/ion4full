@@ -1,21 +1,56 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="google">
     <ion-title>Firebase Playground</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content padding>
   <ion-list>
+    <ion-list-header color="primary">
+      <ion-label>User</ion-label>
+    </ion-list-header>
     <ion-item text-wrap>
       {{ user.email }} {{ user.uid }}
     </ion-item>
-    <ion-item text-wrap *ngFor="let item of items$ | async">
-      {{ item | json }}
-    </ion-item>
   </ion-list>
+
   <ion-card color="primary">
-    <ion-item text-wrap *ngFor="let item of get$ | async">
-      {{ item | json }}
-    </ion-item>
+    <ion-list>
+      <ion-list-header color="primary">
+        <ion-label>get$ w/ async pipe</ion-label>
+      </ion-list-header>
+      <ng-container *ngIf="(markerGroup$ | async) as mg">
+        <ion-item text-wrap>
+          {{mg.markerItemIds | json}}
+        </ion-item>
+        <ion-item text-wrap *ngFor="let uuid of mg.markerItemIds; index as i">
+          <ion-label>{{i}}:{{uuid}}</ion-label>
+          <p *ngIf="(getById$(uuid,'Photo') | async) as p ">
+            {{i}}: {{ p.className }}
+          </p>
+        </ion-item>
+      </ng-container>
+    </ion-list>
   </ion-card>
+
+  <ion-card color="tertiary">
+      <ion-list>
+        <ion-list-header color="tertiary">
+          <ion-label>belongsTo$</ion-label>
+        </ion-list-header>
+        <ion-item text-wrap *ngFor="let item of listBelongsTo$ | async; index as i">
+          {{i}}: {{ item | json }}
+        </ion-item>
+      </ion-list>
+  </ion-card>
+
+
+
+
+  <ion-button size="full" color="danger" disabled="true" (click)="etl_patchForeignKeys()">
+      Patch Foreign Keys
+    </ion-button>
+
+    
+
 </ion-content>
