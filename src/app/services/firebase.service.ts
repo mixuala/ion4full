@@ -44,19 +44,7 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
   }
 
   getCurrentUser():Promise<firebase.User>{
-    return new Promise<any>((resolve, reject) => {
-      this.afAuth.user.subscribe(currentUser =>{
-        // const {email, displayName, uid } = currentUser;
-        // console.log( "currentUser", {email, displayName, uid});
-
-        if (currentUser){
-          this.currentUser = currentUser;
-          // this.collection = this.afs.collection('people').doc(currentUser.uid).collection(this.path);
-        }
-        // resolve(  of(currentUser)  );
-        resolve(  currentUser  );
-      })
-    })
+    return this.afAuth.user.pipe( take(1) ).toPromise();
   }
   
   async addOwnerid(item:T){
@@ -66,7 +54,7 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
         else return new Error("Please sign in");
       })
     }
-    Object.assign(item, { 'ownerid': this.currentUser.uid });
+    Object.assign(item, { 'ownerId': this.currentUser.uid });
   }
 
   timestamp(){
@@ -131,22 +119,17 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
 
   // TODO: add server timestamps
   // see: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/#3-CRUD-Operations-with-Server-Timestamps
-  update(item: T, isPublic:boolean=false): Promise<T> {
+  update<T>(item: any, isPublic:boolean=false): Promise<T> {
       // this.logger.logVerbose(`[BaseService] updating item ${item.id}`);
+      return this.collection
+        .doc<T>(item.id)
+        // use update() or upsert(?) instead set() to change only a subset of keys
+        .update(item)
+        .then( ()=>{
+          return item as T // Partial<T>;
+          return this.collection.doc<T>(item.id).valueChanges().pipe(take(1)).toPromise().then( o=>(o['id']=item.id, o)   );
+        });
 
-      const promise = new Promise<T>((resolve, reject) => {
-        if (!isPublic) this.addOwnerid(item);
-        const docRef = this.collection
-          .doc<T>(item.id)
-          // use update() instead set() to change only a subset of keys
-          .update(item)  
-          .then(() => {
-              resolve({
-                  ...(item as any)
-              });
-          });
-      });
-      return promise;
   }
 
   // see: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/#4-Upsert-Update-or-Create-Method
@@ -161,7 +144,8 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
     .then((snap: Action<DocumentSnapshotDoesNotExist | DocumentSnapshotExists<T>>) => {
       const upsertAction = snap.payload.exists ? 'update' : 'set';
       return docRef[upsertAction](item).then(() => {
-        return {...(item as T)}
+        return item as T;
+        // return this.collection.doc<T>(item.id).valueChanges().pipe(take(1)).toPromise().then( o=>(o['id']=item.id, o)   );
       });
     })
   }

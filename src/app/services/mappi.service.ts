@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, QueryFn } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { BaseService, IBaseEntity, IBaseService} from '../services/firebase.service';
 
 import { Observable, combineLatest, of } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, flatMap } from 'rxjs/operators';
 
 
 /**
@@ -21,7 +21,8 @@ export abstract class UuidBaseService<T extends IBaseEntity> extends BaseService
          * add item.uuid as custom key
          * use firestore.DocumentReference.doc() instead of AngularFireCollection.add()
          */
-        const doc = item['uuid'] ? this.collection.ref.doc( item['uuid'] ) : this.collection.ref.doc();
+        // const doc = item['uuid'] ? this.collection.ref.doc( item['uuid'] ) : this.collection.ref.doc();
+        const doc = this.collection.ref.doc();   // use firebase id, only
         doc.set(item)
         .then(ref => {
             const newItem = {
@@ -42,6 +43,7 @@ export abstract class RestyFirebaseService<T extends IBaseEntity> extends UuidBa
     let whitelist = Object.keys(o).filter( k=>!k.startsWith('_'));
     if (keys)
       whitelist = keys.filter( k=>whitelist.includes(k));
+
     
     const clean = whitelist.reduce( (res,k)=>{
       res[k] = o[k];
@@ -55,37 +57,64 @@ export abstract class RestyFirebaseService<T extends IBaseEntity> extends UuidBa
    * use Observable instead of Resty<T>.get():Promise<T>
    * @param uuid 
    */
-  list$( uuid?:string[] ): Observable<T[]> {
+  list$( uuid?:string[]): Observable<T[]> {
     if ( uuid === undefined ) return super.list();
 
     if (uuid.length) {
       // combineLatest to merge stream of Observables
-      const res = uuid.map( id=>{
-        return this.get(id);
-      });
-      return combineLatest( res );
+      return combineLatest( 
+        ...uuid.map( id=>this.get(id) )
+        , (...all)=>{
+          // exclude undefined
+          return all.filter(o=>!!o)
+        }
+      );
     }
-    // return uuid ? this.get(uuid) : of([]);
+
+    return of([]);
+  }
+
+  listWhere$(where: QueryFn): Observable<T[]> {
+    return this.afs.collection<T>(this.path, where)
+    .snapshotChanges()
+    .pipe(
+      map(actions => {
+        return actions.map( a => {
+          if (a.payload.doc) {
+            /* workaround until spread works with generic types */
+            const data = a.payload.doc.data() as any;
+            const id = a.payload.doc.id;
+            return { id, ...data };
+          }
+        }); 
+      })
+    );
   }
 
   get$(uuid:string):Observable<T>{
     this['get$_'] = this['get$_'] || {};      // cache
     const cached$ = this['get$_'][uuid];
+    // TODO: is there a flatMap or switchMap that 
+    // implicitly caches for view templates?
     if (cached$) return cached$ as Observable<T>;
+
     return this['get$_'][uuid] = this.get(uuid) as Observable<T>;
   }
 
-  
-  belongsTo$( fk_ClassName:string, fk_value:string ): Observable<T[]> {
-    /**
-     * OR, use child belongsTo parent pattern, instead of parent hasMany child
-     * add FK to Child and use doc().where('fk','==',uuid)
-     */
-    const check = this.afs.collection<T>(this.path, (ref)=>{
-      return ref.where(`fk_${fk_ClassName}`,'==',fk_value);
-    });
-
-    return check.snapshotChanges()
+  /**
+   * <T> belongsToOne <ParentClass> 
+   *    Parent hasMany T
+   * @param parent { id: string, [fk]: string}
+   * @param fk (optional) foreign key, defaults to parent['className']
+   */
+  belongsTo$( parent:any, fk?:string,  ): Observable<T[]> {
+    fk = fk || parent['className'];
+    let where:QueryFn = (ref)=>{
+      // belongsTo One, e.g. T.fk=Parent.id
+      return ref.where(`${fk}`,'==', parent.id);
+    }
+    return this.afs.collection<T>(this.path, where)
+    .snapshotChanges()
     .pipe(
       map(actions => {
         return actions.map( a => {
@@ -100,13 +129,30 @@ export abstract class RestyFirebaseService<T extends IBaseEntity> extends UuidBa
     );
   }
 
+  /**
+   * DEPRECATE
+   * <ClassA>       many:many       <ClassB>
+   * <ClassA> hasMany> <T> <hasMany <ClassB>
+   * T is an intersection/middle-man collection
+   * 
+   * @param parent 
+   * @param fk_ClassName 
+   */ 
+  hasMany$( parent:any, fk_ClassName?:string): Observable<T[]> {
+    // Owner hasMany Favorite
+    fk_ClassName = fk_ClassName || this.path;
+    const ids = Object.entries(parent[fk_ClassName]).filter( ([id,v])=>!!v).map( ([id,v])=>id);
+
+    return
+  }
+
   // TODO: add server timestamps
   // see: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/#3-CRUD-Operations-with-Server-Timestamps
-  post(item: T){
+  post(item: T, isPublic:boolean=false ){
     item = RestyFirebaseService.cleanProperties(item) as T;
-    item['created'] = new Date();
-    item['createdAt'] = this.timestamp();
-    return super.add(item); // or super.upsert()
+    // item['created'] = new Date(); // TODO: deprecate
+    item['c'] = this.timestamp();
+    return super.add(item, isPublic); // or super.upsert()
   }
 
   // TODO: add server timestamps
@@ -117,8 +163,8 @@ export abstract class RestyFirebaseService<T extends IBaseEntity> extends UuidBa
       return Promise.reject(`ERROR: uuid does not match, uuid=${uuid}`);
     }
     item = RestyFirebaseService.cleanProperties(item, fields) as T;
-    item['modified'] = new Date();
-    item['modifiedAt'] = this.timestamp();
+    // item['modified'] = new Date(); // TODO: deprecate
+    item['m'] = this.timestamp();
     return super.update(item); // or super.upsert()
   }
 
@@ -197,13 +243,31 @@ export class OwnerService extends RestyFirebaseService<any> {
 @Injectable({
   providedIn: 'root'
 })
+export class FavoriteService extends RestyFirebaseService<any> {
+  constructor(
+    afs: AngularFirestore,
+    afAuth: AngularFireAuth,
+  ){
+    const path = 'Favorite';
+    super(path, afs, afAuth);
+  }
+}
+
+@Injectable({
+  providedIn: 'root'
+})
 export class MappiService {
+  uid: string;
   constructor(
     public Photo: PhotoService,
     public MarkerGroup: MarkerGroupService,
     public MarkerLink: MarkerLinkService,
     public MarkerList: MarkerListService,
-    public Owner: OwnerService,
+    public Owner: OwnerService,  // deprecate
+    public Favorite: FavoriteService,
   ){
+    this.Owner.getCurrentUser().then( o=>this.uid=o&&o.uid || null)
   }
+  
+
 }

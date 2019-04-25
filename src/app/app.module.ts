@@ -41,8 +41,8 @@ import { AuthService } from './services/auth.service';
     StatusBar,
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    FirebaseService,
-    AuthService,
+    // FirebaseService,
+    // AuthService,
   ],
   bootstrap: [AppComponent]
 })

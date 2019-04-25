@@ -34,22 +34,33 @@
   </ion-card>
 
   <ion-card color="tertiary">
-      <ion-list>
-        <ion-list-header color="tertiary">
-          <ion-label>belongsTo$</ion-label>
-        </ion-list-header>
-        <ion-item text-wrap *ngFor="let item of listBelongsTo$ | async; index as i">
-          {{i}}: {{ item | json }}
-        </ion-item>
-      </ion-list>
+    <ion-list>
+      <ion-list-header color="tertiary">
+        <ion-label>belongsTo$</ion-label>
+      </ion-list-header>
+      <ion-item text-wrap *ngIf="markerList$ | async as mList">
+          {{mList.markerGroupIds | json}}
+      </ion-item>
+      <ion-item text-wrap *ngFor="let item of listBelongsTo$ | async; index as i">
+        {{i}}: {{ item | json }}
+      </ion-item>
+    </ion-list>
   </ion-card>
 
 
 
 
-  <ion-button size="full" color="danger" disabled="true" (click)="etl_patchForeignKeys()">
+  <ion-button size="full" color="danger" disabled="false" (click)="etl_patchForeignKeys()">
       Patch Foreign Keys
     </ion-button>
+
+  <ion-button size="full" color="danger" disabled="false" (click)="etl_patchFirebaseIds()">
+      Patch Firebase Ids
+    </ion-button>
+
+  <ion-button size="full" color="danger" disabled="false" (click)="etl_Favorite()">
+      Patch Favorites
+    </ion-button>    
 
     
 
