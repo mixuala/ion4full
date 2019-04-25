@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { 
   AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument,
-  Action, DocumentSnapshotDoesNotExist, DocumentSnapshotExists
+  Action, DocumentSnapshotDoesNotExist, DocumentSnapshotExists,
+  QueryFn
 } from '@angular/fire/firestore';
 import * as firebase from 'firebase/app';
+// import 'firebase/firestore';
 import 'firebase/storage';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { Observable, of } from 'rxjs';
-import { map, take,  } from 'rxjs/operators';
+import { Observable, Subject, of } from 'rxjs';
+import { map, take, takeUntil, } from 'rxjs/operators';
 
 
 
@@ -22,7 +24,7 @@ export interface IBaseService<T> {
   delete(id: string): void;
 }
 export interface IBaseEntity {
-  id: string;
+  id?: string;
 }
 
 export abstract class BaseService<T extends IBaseEntity> implements IBaseService<T> {
@@ -30,6 +32,8 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
 
   protected collection: AngularFirestoreCollection<T>;
   protected currentUser: firebase.User;
+  public unsubscribe$ : Subject<boolean> = new Subject<boolean>();
+  public className: string;
 
   constructor(
     protected path: string, 
@@ -38,9 +42,10 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
     // private logger: ILogger,
   ){
     this.collection = this.afs.collection(path);
-    this.afAuth.user.subscribe(currentUser =>{
+    // NOTE: every DB Class has a subscription to this.afAuth.user
+    this.afAuth.user.pipe( takeUntil(this.unsubscribe$) ).subscribe(currentUser =>{
       if (currentUser) this.currentUser = currentUser;
-    })
+    });
   }
 
   getCurrentUser():Promise<firebase.User>{
@@ -68,6 +73,7 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
         .doc<T>(identifier)
         .snapshotChanges()
         .pipe(
+            takeUntil(this.unsubscribe$),
             map(doc => {
                 if (doc.payload.exists) {
 		    /* workaround until spread works with generic types */
@@ -86,6 +92,7 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
     return this.collection
         .snapshotChanges()
         .pipe(
+            takeUntil(this.unsubscribe$),
             map(changes => {
                 return changes.map(a => {
                     const data = a.payload.doc.data() as T;
@@ -96,25 +103,21 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
         );
   }
 
-  // TODO: add server timestamps
   // see: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/#3-CRUD-Operations-with-Server-Timestamps
   add(item: T, isPublic:boolean=false): Promise<T> {
     // this.logger.logVerbose('[BaseService] adding item', item);
     
-    const promise = new Promise<T>( async (resolve, reject) => {
-        if (!isPublic) this.addOwnerid(item);
-        const doc = item['uuid'] ? this.collection.ref.doc( item['uuid'] ) : this.collection.ref.doc();
-        doc.set(item)
-        this.collection.add(item).then(ref => {
-            const newItem = {
-                id: ref.id,
-                /* workaround until spread works with generic types */
-                ...(item as any)
-            };
-            resolve(newItem);
-        });
-    });
-    return promise;
+    if (!isPublic) this.addOwnerid(item);
+    
+    return this.collection.add(item).then(ref => {  
+        const newItem = {
+            id: ref.id,
+            /* workaround until spread works with generic types */
+            ...(item as any)
+        };
+        return newItem;
+      }
+    );
   }
 
   // TODO: add server timestamps
@@ -150,20 +153,41 @@ export abstract class BaseService<T extends IBaseEntity> implements IBaseService
     })
   }
 
-  delete(id: string): void {
+  delete(id: string): Promise<void> {
       // this.logger.logVerbose(`[BaseService] deleting item ${id}`);
-
       const docRef = this.collection.doc<T>(id);
-      docRef.delete();
+      return docRef.delete();
+  }
+
+
+  /**
+   * INCOMPLETE
+   * toggle subscriptions between 'public' and 'owner' views
+   * by changing where clause
+   * 
+   * BUT: how can we change the QueryFn dynamically? do we have to 
+   * recreate the Observable?
+   */
+  logout() {
+    console.warn('LOGOUT/unsubscribe functionality is INCOMPLETE');
+    // TODO: is this actually the desired action?
+    // unsubscribe to 'owner' view
+    this.onDestroy();
+
+    // resubscribe to 'public' view
+    const ownerId = this.currentUser && this.currentUser.uid || null;
+    const limitOwner:QueryFn = (ref)=>{
+      // belongsTo One, e.g. T.fk=Parent.id
+      return ref.where('ownerId','==', ownerId);
+    }
+  }
+
+  onDestroy(){
+    this.unsubscribe$.next(true);
+    this.unsubscribe$.complete();
   }
 
 }
-
-
-
-
-
-
 
 
 

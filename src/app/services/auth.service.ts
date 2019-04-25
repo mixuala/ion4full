@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as firebase from 'firebase/app';
-import { FirebaseService } from './firebase.service';
 import { AngularFireAuth } from '@angular/fire/auth';
+
+import { Observable, } from 'rxjs';
+import { take, } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +11,18 @@ import { AngularFireAuth } from '@angular/fire/auth';
 export class AuthService {
 
   constructor(
-    private firebaseService: FirebaseService,
+    // private firebaseService: FirebaseService,
     public afAuth: AngularFireAuth
   ){}
+
+
+  getCurrentUser():Promise<firebase.User>{
+    return this.afAuth.user.pipe( take(1) ).toPromise();
+  }
+
+  getCurrentUser$():Observable<firebase.User>{
+    return this.afAuth.user;
+  }
 
   doRegister(value){
    return new Promise<any>((resolve, reject) => {
@@ -35,7 +46,7 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       this.afAuth.auth.signOut()
       .then(() => {
-        this.firebaseService.unsubscribeOnLogOut();
+        // this.firebaseService.unsubscribeOnLogOut();
         resolve();
       }).catch((error) => {
         console.log(error);

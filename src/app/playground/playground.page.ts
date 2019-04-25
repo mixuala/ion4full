@@ -5,44 +5,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Observable, combineLatest, of, from, timer} from 'rxjs';
 import { map, flatMap, mergeMap, switchMap, take, takeWhile } from 'rxjs/operators';
 import { MappiService, } from '../services/mappi.service';
+import { Helpful } from '../services/firebase.helpers'; 
 
 
 
 import { RAW_DEMO_DATA, jsonEncode, jsonEscape, PICSUM_IDS } from '../../assets/sample-data/mappi-demo-data'
-import { Action } from 'rxjs/internal/scheduler/Action';
 
-
-class Helpful {
-  static pick = (O:any, ...K:string[]) => K.reduce((o, k) => (O&&O[k]?o[k]=O[k]:0, o), {});
-  static sortByIds = (O:any[], ids:string[])=>{
-    const dict = O.reduce( (d,o)=>(d[o.id]=o, d), {});
-    return ids.map( k=>dict[k] );
-  }
-  static rateLimit(chores:any[], action:(task:any)=>any, delay=500):Promise<any>{
-    return new Promise( (resolve, reject)=>{
-      const waitFor = [];
-      timer(0,delay).pipe( 
-        takeWhile(()=>chores.length>0), 
-      ).subscribe( _=>{
-        const task = chores.shift()
-        waitFor.push( action(task) );
-      }
-      , (err)=>{ reject(err) }
-      , ()=>{ // complete
-        console.log("rateLimit complete");
-        resolve(Promise.all(waitFor));
-      });
-    })
-  }
-  public static jsonEscape(str)  {
-    return str.replace(/\n/g, "\\\\n").replace(/\r/g, "\\\\r").replace(/\t/g, "\\\\t");
-  }
-  // example: JSON.parse(  Helpful.jsonEncode( Helpful.jsonEscape( JSON.stringify(data) )))
-  public static jsonEncode(str)  {
-    return str.replace(/\\n/g, "\\\\n").replace(/\\r/g, "\\\\r").replace(/\\t/g, "\\\\t");
-  }
-
-}
 
 @Component({
   selector: 'app-playground',
@@ -69,13 +37,13 @@ export class PlaygroundPage implements OnInit {
     window['check'] = this;
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     if (this.route && this.route.data) {
       this.getRouteData();
     }
 
     this.getMappi();
-    console.log(this.mappiService.uid)
+    console.log(await this.mappiService.Owner.getCurrentUser())
   }
 
 
@@ -85,13 +53,11 @@ export class PlaygroundPage implements OnInit {
     // });
     // await loading.present();
 
-    this.route.data.subscribe(routeData => {
-      routeData['data'].subscribe(data => {
-        // loading.dismiss();
-        // NOTE: this is actually the AngularFireAuth.user, not the /users collection
-        this.user = data;  
-      })
-    })
+    if (this.route && this.route.data) {
+      this.route.data.subscribe( routeData=>{
+        this.user=routeData['data'];
+      });  
+    }
   }
 
   getById$(uuid:string, className:string):Observable<any>{
@@ -131,16 +97,16 @@ export class PlaygroundPage implements OnInit {
     // );
       
     // async pipe pattern
-    let mgUuid = '0abcd637-3b58-4d42-9f5b-89d83415b282';
-    mgUuid = '2DYfTL7Xh2M6onOOTI97';
-    this.markerGroup$ = this.mappiService.MarkerGroup.get$(mgUuid);
+    let mgUuids = ['0abcd637-3b58-4d42-9f5b-89d83415b282','2DYfTL7Xh2M6onOOTI97','P3GXOvADkm1CVsVwfDMI'];
+    this.markerGroup$ = this.mappiService.MarkerGroup.list$(mgUuids)
+    .pipe( map( arr=>arr.pop() ), );
     
     // belongsTo$ pattern
-    let mListId = '384e4987-00d9-4934-a401-985534bb896f';
-    mListId = 'wGBpDU6yxS7STcnNXrNK';
-    this.markerList$ = this.mappiService.MarkerList.get$(mListId);
+    let mListIds = ['384e4987-00d9-4934-a401-985534bb896f','wGBpDU6yxS7STcnNXrNK','rDiSSlowhe56NXgyd7VM'];
+    this.markerList$ = this.mappiService.MarkerList.list$(mListIds);
     this.markerList$.pipe(
       take(1),
+      map( arr=>arr.pop() ),
       switchMap( (mList)=>{  // mListId:onChanges(): switch to latest 
         this.listBelongsTo$ = this.belongsTo$(mList)
         .pipe(
@@ -224,7 +190,7 @@ export class PlaygroundPage implements OnInit {
 
         // to JSON
         const check = [...classList].reduce( (o,k,i)=>(o[k]=lists[i],o),{})
-        const raw = Helpful.jsonEscape(JSON.stringify(check));
+        const raw = jsonEscape(JSON.stringify(check));
 
         lists.forEach( items=>{
           items.forEach( o=>{

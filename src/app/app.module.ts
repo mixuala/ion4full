@@ -33,6 +33,7 @@ import { AuthService } from './services/auth.service';
     ComponentsModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule, // imports firebase/firestore
+    // AngularFirestoreModule.enablePersistence(),    // with offline support
     AngularFireAuthModule, // imports firebase/auth
     AngularFireMessagingModule,
     ServiceWorkerModule.register('combined-sw.js', { enabled: environment.production })

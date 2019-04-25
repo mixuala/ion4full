@@ -1,55 +1,31 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, QueryFn } from '@angular/fire/firestore';
+import { 
+  AngularFirestore, QueryFn 
+} from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { BaseService, IBaseEntity, IBaseService} from '../services/firebase.service';
 
 import { Observable, combineLatest, of } from 'rxjs';
-import { map, flatMap } from 'rxjs/operators';
+import { map, take, takeUntil,  } from 'rxjs/operators';
+
+import { Helpful } from './firebase.helpers'; 
 
 
-/**
- * use item.uuid as custom key over firestore generated key
- */
-export abstract class UuidBaseService<T extends IBaseEntity> extends BaseService<T> {
-
-  add(item: T, isPublic:boolean=false): Promise<T> {
-    // this.logger.logVerbose('[BaseService] adding item', item);
-    
-    const promise = new Promise<T>( async (resolve, reject) => {
-        if (!isPublic) this.addOwnerid(item);
-        /*
-         * add item.uuid as custom key
-         * use firestore.DocumentReference.doc() instead of AngularFireCollection.add()
-         */
-        // const doc = item['uuid'] ? this.collection.ref.doc( item['uuid'] ) : this.collection.ref.doc();
-        const doc = this.collection.ref.doc();   // use firebase id, only
-        doc.set(item)
-        .then(ref => {
-            const newItem = {
-                id: doc.id,     // ref.id
-                /* workaround until spread works with generic types */
-                ...(item as any)
-            };
-            resolve(newItem);
-        });
-    });
-    return promise;
-  }
-}
-
-export abstract class RestyFirebaseService<T extends IBaseEntity> extends UuidBaseService<T> {
+export abstract class RestyFirebaseService<T extends IBaseEntity> extends BaseService<T> {
 
   static cleanProperties(o, keys?:string[]){
     let whitelist = Object.keys(o).filter( k=>!k.startsWith('_'));
     if (keys)
       whitelist = keys.filter( k=>whitelist.includes(k));
 
-    
-    const clean = whitelist.reduce( (res,k)=>{
-      res[k] = o[k];
-      return res;
-    },{});
-    return clean;
+    return Helpful.pick( o, ...whitelist);
+  }
+
+  public className:string;
+
+  constructor(path, ...params){
+    super( path, params[0], params[1]);
+    this.className = path;
   }
 
   /**
@@ -78,6 +54,7 @@ export abstract class RestyFirebaseService<T extends IBaseEntity> extends UuidBa
     return this.afs.collection<T>(this.path, where)
     .snapshotChanges()
     .pipe(
+      takeUntil( this.unsubscribe$ ),
       map(actions => {
         return actions.map( a => {
           if (a.payload.doc) {
@@ -98,7 +75,16 @@ export abstract class RestyFirebaseService<T extends IBaseEntity> extends UuidBa
     // implicitly caches for view templates?
     if (cached$) return cached$ as Observable<T>;
 
-    return this['get$_'][uuid] = this.get(uuid) as Observable<T>;
+    return this['get$_'][uuid] = super.get(uuid) as Observable<T>;
+  }
+
+  // deprecate: for back compatibility with Resty
+  getP(uuids:string | string[]):Promise<T[]>{
+    if (uuids instanceof Array)
+      return this.list$(uuids).pipe(take(1)).toPromise();
+    else if (uuids==='all')
+      return this.list().pipe(take(1)).toPromise();
+    else return Promise.resolve([]);
   }
 
   /**
@@ -111,11 +97,13 @@ export abstract class RestyFirebaseService<T extends IBaseEntity> extends UuidBa
     fk = fk || parent['className'];
     let where:QueryFn = (ref)=>{
       // belongsTo One, e.g. T.fk=Parent.id
-      return ref.where(`${fk}`,'==', parent.id);
+      // return ref.where(`${fk}.${parent.id}`,'==', true);
+      return ref.where(`Marker.${parent.id}`,'==', parent.className);
     }
     return this.afs.collection<T>(this.path, where)
     .snapshotChanges()
     .pipe(
+      takeUntil( this.unsubscribe$ ),
       map(actions => {
         return actions.map( a => {
           if (a.payload.doc) {
@@ -129,33 +117,14 @@ export abstract class RestyFirebaseService<T extends IBaseEntity> extends UuidBa
     );
   }
 
-  /**
-   * DEPRECATE
-   * <ClassA>       many:many       <ClassB>
-   * <ClassA> hasMany> <T> <hasMany <ClassB>
-   * T is an intersection/middle-man collection
-   * 
-   * @param parent 
-   * @param fk_ClassName 
-   */ 
-  hasMany$( parent:any, fk_ClassName?:string): Observable<T[]> {
-    // Owner hasMany Favorite
-    fk_ClassName = fk_ClassName || this.path;
-    const ids = Object.entries(parent[fk_ClassName]).filter( ([id,v])=>!!v).map( ([id,v])=>id);
-
-    return
-  }
-
-  // TODO: add server timestamps
   // see: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/#3-CRUD-Operations-with-Server-Timestamps
-  post(item: T, isPublic:boolean=false ){
+  post(item: T, isPublic:boolean=false ):Promise<T>{
     item = RestyFirebaseService.cleanProperties(item) as T;
     // item['created'] = new Date(); // TODO: deprecate
     item['c'] = this.timestamp();
     return super.add(item, isPublic); // or super.upsert()
   }
 
-  // TODO: add server timestamps
   // see: https://angularfirebase.com/lessons/firestore-advanced-usage-angularfire/#3-CRUD-Operations-with-Server-Timestamps  
   put(uuid:string, item:T, fields?:string[]):Promise<T>{
     if (uuid != item.id) {
@@ -227,6 +196,7 @@ export class MarkerListService extends RestyFirebaseService<any> {
   }
 }
 
+// deprecate: use FavoriteService instead
 @Injectable({
   providedIn: 'root'
 })
@@ -257,17 +227,17 @@ export class FavoriteService extends RestyFirebaseService<any> {
   providedIn: 'root'
 })
 export class MappiService {
-  uid: string;
+  public uid: string;
   constructor(
     public Photo: PhotoService,
     public MarkerGroup: MarkerGroupService,
     public MarkerLink: MarkerLinkService,
     public MarkerList: MarkerListService,
-    public Owner: OwnerService,  // deprecate
     public Favorite: FavoriteService,
+    public Owner: OwnerService,  // deprecate
   ){
-    this.Owner.getCurrentUser().then( o=>this.uid=o&&o.uid || null)
-  }
+    this.Owner.getCurrentUser().then( v=>this.uid=v.uid)
+   }
   
 
 }
